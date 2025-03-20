@@ -19,7 +19,7 @@ Paste the following repository link and click add then close https://github.com/
 
 ![](https://github.com/martinville/solarsynkv3/blob/main/addrepo.png?raw=true)
 
-Refresh the browser. Right at the bottom you should now see the "SolarSynk" add-on. Simply click it then click "Install"
+Refresh the browser. Right at the bottom you should now see the "SolarSynk" add-on. Click it to open the into page, then click the "Install" button.
 
 ![](https://github.com/martinville/solarsynkv3/blob/main/addonavail.png?raw=true)
 
