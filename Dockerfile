@@ -14,7 +14,7 @@ COPY getapi.py /
 COPY gettoken.py /
 COPY postapi.py /
 COPY settingsmanager.py /
-COPY battery.json /
+
 
 
 RUN chmod a+x /run.sh
