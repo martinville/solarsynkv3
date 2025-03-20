@@ -30,3 +30,8 @@ After installing this add-on make sure you enter all the required information on
 (This addon runs in a docker and cannot reach your home assistant network on the local loopback name or ip)
 
 ![](https://github.com/martinville/solarsynkv3/blob/main/settings.png)
+
+In case you are unsure what your Sunsynk inverter's serial number is. Log into the synsynk.net portal and copy the serial number from the "Inverter" menu item.
+For multiple inverters seperate the inverter serial numbers with a semi colon ; Example 123456;7890123
+
+![](https://github.com/martinville/solarsynkv3/blob/main/sunserial.png)
