@@ -1,2 +1,5 @@
 ### 2025/03/20
+Version "3.0.2" - Removed ability to post settings back to inverter. Feature will be added later on.
+
+### 2025/03/20
 Version "3.0.1" - Major Update
