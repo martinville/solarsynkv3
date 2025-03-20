@@ -68,8 +68,8 @@ for serialitem in inverterserials:
         getapi.GetDCACTemp(BearerToken,str(serialitem))
         
         #getapi.GetInverterSerials(BearerToken,str(serialitem))
-        settingsmanager.GetSettings(BearerToken,str(serialitem))  
-        settingsmanager.GetNewSettings(BearerToken,str(serialitem)) 
+        #settingsmanager.GetSettings(BearerToken,str(serialitem))  
+        #settingsmanager.GetNewSettings(BearerToken,str(serialitem)) 
         
         
         VarCurrentDate = datetime.now()
