@@ -10,3 +10,5 @@ This add-on publishes sensor values to Home Assistant entities using the local A
 
 ### Creating a Long-Lived Access Token
 Click your profile picture in the bottom left of the HA interface. Scroll down to the bottom and generate a long-lived token. The name isn't important for SolarSynk, but the token key is—be sure to copy and save it for later use.
+
+![](https://github.com/martinville/solarsynkv3/blob/main/longlivetoken.png?raw=true)
