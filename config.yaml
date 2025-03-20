@@ -1,0 +1,35 @@
+name: "SolarSynkV3"
+description: "Home Assistant add-on for syncing solar/inverter data from SynSynk.net"
+version: "1.0.1"
+slug: "solar_synkv3"
+init: false
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386
+  
+startup: services
+ports:
+  8000/tcp: 8000
+  
+options:
+  sunsynk_user: ""
+  sunsynk_pass: ""
+  sunsynk_serial: ""
+  Home_Assistant_IP: ""
+  Home_Assistant_PORT: 8123
+  HA_LongLiveToken: ""
+  Refresh_rate: 300
+  Enable_HTTPS: false  
+  
+schema:
+  sunsynk_user: str
+  sunsynk_pass: password
+  sunsynk_serial: str
+  Home_Assistant_IP: str
+  Home_Assistant_PORT: int
+  HA_LongLiveToken: password
+  Refresh_rate: int
+  Enable_HTTPS: bool
