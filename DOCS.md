@@ -35,3 +35,8 @@ In case you are unsure what your Sunsynk inverter's serial number is. Log into t
 For multiple inverters seperate the inverter serial numbers with a semi colon ; Example 123456;7890123
 
 ![](https://github.com/martinville/solarsynkv3/blob/main/sunserial.png)
+
+Make sure you also populate the "HA_LongLiveToken" field with the long-lived token that you created earlier on.
+
+### Start the script
+After entering all of the required information you can go ahead and start the service script.
