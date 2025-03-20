@@ -42,3 +42,5 @@ Make sure you also populate the "HA_LongLiveToken" field with the long-lived tok
 After entering all of the required information you can go ahead and start the service script.
 
 ![](https://github.com/martinville/solarsynkv3/blob/main/scriptstarted.png?raw=true)
+
+After starting the add-on, verify everything is working by clicking the "Log" tab. Scroll through the log to ensure sensor data is populated correctly. The log will display success or error messages based on the status of the integration.
