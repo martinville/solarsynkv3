@@ -40,3 +40,5 @@ Make sure you also populate the "HA_LongLiveToken" field with the long-lived tok
 
 ### Start the script
 After entering all of the required information you can go ahead and start the service script.
+
+![](https://github.com/martinville/solarsynkv3/blob/main/scriptstarted.png?raw=true)
