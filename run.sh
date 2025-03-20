@@ -27,7 +27,9 @@ VarCurrentDate=$(date +%Y-%m-%d)
 clear
 #python3 -m http.server 8000
 
+
 python3 /main.py
+
 
 
 echo "All Done! Waiting " $Refresh_rate " sesonds to rinse and repeat."

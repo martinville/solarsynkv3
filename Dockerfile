@@ -12,8 +12,9 @@ COPY run.sh /
 COPY main.py /
 COPY getapi.py /
 COPY gettoken.py /
-COPY postha.py /
+COPY postapi.py /
 COPY settingsmanager.py /
+COPY battery.json /
 
 
 RUN chmod a+x /run.sh

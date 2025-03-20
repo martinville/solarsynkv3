@@ -1,5 +1,6 @@
 
-def GetSettings(Token,Serial):
+def DownloadSunSynkSettings(Token,Serial):
+    #Set sunsynk settings and save to file settings_serial.json
     import json
     import requests
     from datetime import datetime
@@ -28,12 +29,13 @@ def GetSettings(Token,Serial):
         response.raise_for_status()
 
         parsed_inverter_json = response.json()
+        
 
         if parsed_inverter_json.get('msg') == "Success":           
             print(ConsoleColor.BOLD + "Settings fetch response: " + ConsoleColor.OKGREEN + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
             #print(str(parsed_inverter_json))
-            with open("settings.json", "w") as file:
-                file.write(str(parsed_inverter_json))
+            with open("svr_settings.json", "w") as file:
+                json.dump(parsed_inverter_json, file, indent=4)
                 
             
             print(ConsoleColor.OKGREEN + "Settings download complete" + ConsoleColor.ENDC)
@@ -50,7 +52,7 @@ def GetSettings(Token,Serial):
     except json.JSONDecodeError:
         print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)         
 
-def GetNewSettings(SunSynkToken,Serial):
+def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
     import json
     import requests
     import urllib3
@@ -96,20 +98,16 @@ def GetNewSettings(SunSynkToken,Serial):
         #print(str(parsed_inverter_json['state']))
         EntSettings = str(parsed_inverter_json['state']).split(";")
         print("The following settings were found in: " + ConsoleColor.OKCYAN  +  "solarsynkv3_" + Serial + "_settings" + ConsoleColor.ENDC)        
+        
+        LoopCount=0        
         for EntSetting in EntSettings: 
-            print(str(EntSetting))
-            EntSettingVals = str(EntSetting).split(":")
-            for EntSettingVal in EntSettingVals:
-                #Put repeating code here
-                print(EntSettingVal)
-                # Load the settings file to be modified data from a file
-                with open('settings.json', 'r') as file:
-                    data = json.load(file)
-                # Modify the data (example: add a new key-value pair)
-                data[EntSetting]['EntSettingVal'] = "00:00"            
-                # Save the modified data back to file
-                with open('settings.json', 'w') as file:
-                    json.dump(data, file, indent=2)  # 'indent' for pretty-printing                
+            FormatToJSON = "{" + str(EntSetting) + "}"
+            FormatToJSON = json.loads(FormatToJSON)
+
+            JSON_Key = list(FormatToJSON.keys())[0]
+            JSON_Value = FormatToJSON[JSON_Key]
+            print(JSON_Key  + "-->" + JSON_Value)
+            print(ConsoleColor.WARNING + DetermineSettingCategory(JSON_Key) + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
         print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Home Assistant API." + ConsoleColor.ENDC)
@@ -122,3 +120,54 @@ def GetNewSettings(SunSynkToken,Serial):
         print(ConsoleColor.FAIL + "Error: Failed to parse Home Assistant API response." + ConsoleColor.ENDC)        
         
         
+def DetermineSettingCategory(JSON_Search_Key):
+    #Determine the type of setting that is intended to be updated
+    if JSON_Search_Key in ("absorptionVolt","battMode","batteryCap","batteryEfficiency","batteryEmptyV","batteryImpedance","batteryLowCap","batteryLowVolt","batteryMaxCurrentCharge","batteryMaxCurrentDischarge","batteryOn","batteryRestartCap","batteryRestartVolt","batteryShutdownCap","batteryShutdownVolt","bmsErrStop","disableFloatCharge","equChargeCycle","equChargeTime","equVoltCharge","floatVolt","genChargeOn","genSignal","generatorBatteryCurrent","generatorForcedStart","generatorStartCap","generatorStartVolt","gridSignal","lithiumMode","lowNoiseMode","lowPowerMode","safetyType","sdBatteryCurrent","sdChargeOn","sdStartCap","sdStartVol","sdStartVolt","signalIslandModeEnable","sn","tempco"):
+        
+
+        BuildBatterySettingJSON="{"
+        ArrBattery_settings = ["absorptionVolt","battMode","batteryCap","batteryEfficiency","batteryEmptyV","batteryImpedance","batteryLowCap","batteryLowVolt","batteryMaxCurrentCharge","batteryMaxCurrentDischarge","batteryOn","batteryRestartCap","batteryRestartVolt","batteryShutdownCap","batteryShutdownVolt","bmsErrStop","disableFloatCharge","equChargeCycle","equChargeTime","equVoltCharge","floatVolt","genChargeOn","genSignal","generatorBatteryCurrent","generatorForcedStart","generatorStartCap","generatorStartVolt","gridSignal","lithiumMode","lowNoiseMode","lowPowerMode","safetyType","sdBatteryCurrent","sdChargeOn","sdStartCap","sdStartVol","sdStartVolt","signalIslandModeEnable","sn","tempco"]
+        for Item_Battery_setting in ArrBattery_settings:
+            #print(Item_Battery_setting)
+            BuildBatterySettingJSON=BuildBatterySettingJSON + '"' + Item_Battery_setting + '" : "",'
+        
+        BuildBatterySettingJSON = BuildBatterySettingJSON[:-1]
+        BuildBatterySettingJSON = BuildBatterySettingJSON + "}"
+        #print(BuildBatterySettingJSON)
+        # Open file battery_settings. in write mode ("w" overwrites existing content)
+        with open("battery_settings.json", "w") as file:
+            file.write(BuildBatterySettingJSON)           
+
+        #DEBUG Read contents of newlybuilt battery_settings file
+        #with open("svr_settings.json", "r") as file:
+        #    content = file.read()
+        #print(content)  
+        return("Battery Setting --> " + JSON_Search_Key + " updated" )
+
+
+
+
+def merge_json_settings(source_file, target_file, output_file):
+    import json
+    # Load the source JSON file
+    with open(source_file, 'r') as src:
+        source_data = json.load(src)
+    
+    # Load the target JSON file
+    with open(target_file, 'r') as tgt:
+        target_data = json.load(tgt)
+    
+    # Ensure we're working with the "data" section of the source
+    source_settings = source_data.get("data", {})
+    
+    # Iterate over the target keys and update them with source values if available
+    for key in target_data:
+        if key in source_settings:
+            target_data[key] = source_settings[key]
+    
+    # Save the merged data to the output file
+    with open(output_file, 'w') as out:
+        json.dump(target_data, out, indent=4)
+    
+    return target_data
+

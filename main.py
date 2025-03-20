@@ -1,8 +1,8 @@
 import gettoken
 import getapi
-import postha
+import postapi
 import settingsmanager
-
+import os
 
 
 import json
@@ -25,8 +25,7 @@ VarCurrentDate = datetime.now()
 # Load options from JSON file
 with open('/data/options.json') as options_file:
    json_settings = json.load(options_file)
-
-
+    
 #Get Inverter serials to iterate through
 inverterserials = str(json_settings['sunsynk_serial']).split(";")
 for serialitem in inverterserials:    
@@ -37,7 +36,12 @@ for serialitem in inverterserials:
     BearerToken=gettoken.gettoken()
     
     if BearerToken != "" :
+        print("Cleaning cache...")        
+        #os.remove("settings.json")
         #print(BearerToken)            
+        
+
+        
         print("--------------------------------------")
         print("--" + ConsoleColor.WARNING + "Getting Inverter Information")
         print("--------------------------------------")
@@ -68,8 +72,18 @@ for serialitem in inverterserials:
         getapi.GetDCACTemp(BearerToken,str(serialitem))
         
         #getapi.GetInverterSerials(BearerToken,str(serialitem))
-        #settingsmanager.GetSettings(BearerToken,str(serialitem))  
-        #settingsmanager.GetNewSettings(BearerToken,str(serialitem)) 
+        settingsmanager.DownloadSunSynkSettings(BearerToken,str(serialitem))  
+        settingsmanager.GetNewSettingsFromHAEntity(BearerToken,str(serialitem)) 
+
+        source_file = "svr_settings.json"
+        target_file = "battery_settings.json"
+        output_file = "merged_battery_settings.json"        
+        settingsmanager.merge_json_settings(source_file, target_file, output_file)
+        #DEBUG Read contents of newlybuilt battery_settings file
+        with open("merged_battery_settings.json", "r") as file:
+            content = file.read()
+        print(content)          
+        
         
         
         VarCurrentDate = datetime.now()
