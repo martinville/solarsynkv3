@@ -72,17 +72,17 @@ for serialitem in inverterserials:
         getapi.GetDCACTemp(BearerToken,str(serialitem))
         
         #getapi.GetInverterSerials(BearerToken,str(serialitem))
-        settingsmanager.DownloadSunSynkSettings(BearerToken,str(serialitem))  
-        settingsmanager.GetNewSettingsFromHAEntity(BearerToken,str(serialitem)) 
+        #settingsmanager.DownloadSunSynkSettings(BearerToken,str(serialitem))  
+        #settingsmanager.GetNewSettingsFromHAEntity(BearerToken,str(serialitem)) 
 
-        source_file = "svr_settings.json"
-        target_file = "battery_settings.json"
-        output_file = "merged_battery_settings.json"        
-        settingsmanager.merge_json_settings(source_file, target_file, output_file)
+        #source_file = "svr_settings.json"
+        #target_file = "battery_settings.json"
+        #output_file = "merged_battery_settings.json"        
+        #settingsmanager.merge_json_settings(source_file, target_file, output_file)
         #DEBUG Read contents of newlybuilt battery_settings file
-        with open("merged_battery_settings.json", "r") as file:
-            content = file.read()
-        print(content)          
+        #with open("merged_battery_settings.json", "r") as file:
+        #    content = file.read()
+        #print(content)          
         
         
         
