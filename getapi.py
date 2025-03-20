@@ -199,6 +199,10 @@ def GetGridData(Token,Serial):
                 print(f"Grid Phase {currentphase} Voltage: " + ConsoleColor.OKCYAN + str(parsed_inverter_json['data']['vip'][x]['volt']) + ConsoleColor.ENDC)
                 print(f"Grid Phase {currentphase} Current: " + ConsoleColor.OKCYAN + str(parsed_inverter_json['data']['vip'][x]['current']) + ConsoleColor.ENDC)
                 print(f"Grid Phase {currentphase} Power: " + ConsoleColor.OKCYAN + str(parsed_inverter_json['data']['vip'][x]['power']) + ConsoleColor.ENDC)
+                postapi.PostHAEntity(Serial,"V","voltage",f"Grid Phase {currentphase} Voltage",f"grid_phase{currentphase}_voltage",parsed_inverter_json['data']['vip'][x]['volt'])
+                postapi.PostHAEntity(Serial,"A","current",f"Grid Phase {currentphase} Current",f"grid_phase{currentphase}_current",parsed_inverter_json['data']['vip'][x]['current'])
+                postapi.PostHAEntity(Serial,"W","power",f"Grid Phase {currentphase} Power",f"grid_phase{currentphase}_power",parsed_inverter_json['data']['vip'][x]['power'])                
+                
                 
             print("Grid Pac: " + ConsoleColor.OKCYAN + str(parsed_inverter_json['data']['pac']) + ConsoleColor.ENDC)
             print("Grid Qac: " + ConsoleColor.OKCYAN + str(parsed_inverter_json['data']['qac']) + ConsoleColor.ENDC)
