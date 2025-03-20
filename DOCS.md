@@ -12,3 +12,7 @@ This add-on publishes sensor values to Home Assistant entities using the local A
 Click your profile picture in the bottom left of the HA interface. Scroll down to the bottom and generate a long-lived token. The name isn't important for SolarSynk, but the token key is—be sure to copy and save it for later use.
 
 ![](https://github.com/martinville/solarsynkv3/blob/main/longlivetoken.png?raw=true)
+
+### Add this respository to your Home Assistant add-on store
+From the "Settings" menu item in Home Asstant's UI go to "Add-ons". In the bottom right-hand corner click "ADD-ON STORE". The in the right-hand top corner click the three dots and select "Repositories".
+Paste the following repository link and click add then close https://github.com/martinville/solarsynkv2
