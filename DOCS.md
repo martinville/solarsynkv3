@@ -27,3 +27,4 @@ Refresh the browser. Right at the bottom you should now see the "SolarSynk" add-
 After installing this add-on make sure you enter all the required information on the configuration page. Note if your intentions are to update a Home Assistant installtion with a different IP than the one where this addon is installed, you need to generate the long live token on the Home Assistant instance where entities will be updated. 
 DO NOT USE localhost or 127.0.0.1 in the IP field, either use the actual IP or hostname. If you implemented a SSL certificate , its mandatory to use the hostname assigned to the certificate and not the IP. 
 
+![](https://github.com/martinville/solarsynkv3/blob/main/settings.png)
