@@ -18,3 +18,6 @@ From the "Settings" menu item in Home Asstant's UI go to "Add-ons". In the botto
 Paste the following repository link and click add then close https://github.com/martinville/solarsynkv3
 
 ![](https://github.com/martinville/solarsynkv3/blob/main/addrepo.png?raw=true)
+
+Refresh the browser. Right at the bottom you should now see the "SolarSynk" add-on. Simply click it then click "Install"
+
