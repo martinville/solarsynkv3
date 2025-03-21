@@ -40,8 +40,13 @@ for serialitem in inverterserials:
         #os.remove("settings.json")
         #print(BearerToken)            
         
-        print("Testing Home Assistant API")
-        print(postapi.ConnectionTest("TEST","A","current",f"connection_test",f"connection_test_current","100"))
+        print(ConsoleColor.WARNING + "Testing HA API" + ConsoleColor.ENDC)
+        varContest = postapi.ConnectionTest("TEST","A","current",f"connection_test",f"connection_test_current","100")
+        if(varContest=="Connection Success"):
+            print(varContest)
+        else:
+            print(varContest)
+            print(ConsoleColor.MAGENTA + "Ensure you’ve entered the correct IP address and port without http:// or https:// prefixes. If Home Assistant has SSL enabled, be sure to check Enable_HTTPS. If this Docker container is running on a different machine, verify that the Home Assistant server is accessible." + ConsoleColor.ENDC)
         
         print("--------------------------------------")
         print("--" + ConsoleColor.WARNING + "Getting Inverter Information")
