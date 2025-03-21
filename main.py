@@ -42,7 +42,7 @@ for serialitem in inverterserials:
         
         print(ConsoleColor.WARNING + "Testing HA API" + ConsoleColor.ENDC)
         varContest = postapi.ConnectionTest("TEST","A","current",f"connection_test",f"connection_test_current","100")
-        if(varContest=="Connection Success"):
+        if varContest=="Connection Success":
             print(varContest)
         else:
             print(varContest)
