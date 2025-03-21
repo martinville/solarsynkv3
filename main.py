@@ -40,7 +40,8 @@ for serialitem in inverterserials:
         #os.remove("settings.json")
         #print(BearerToken)            
         
-
+        print("Testing Home Assistant API")
+        print(postapi.ConnectionTest("TEST","A","current",f"connection_test",f"connection_test_current","100"))
         
         print("--------------------------------------")
         print("--" + ConsoleColor.WARNING + "Getting Inverter Information")
