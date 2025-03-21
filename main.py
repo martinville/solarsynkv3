@@ -100,4 +100,4 @@ for serialitem in inverterserials:
         print(f"Script completion time: {ConsoleColor.OKBLUE} {VarCurrentDate} {ConsoleColor.ENDC}") 
         
     else:
-        print(f"Something went wrong for inverter serial: {serialitem}")
+        print(f"Something went wrong for inverter serial: {serialitem}. The Sunsynk server may be experiencing an outage, or the user credentials provided could be incorrect. Please verify that your username and password are correct. Note that this add-on cannot connect to your Sunsynk profile if MFA is enabled. Additionally, certain special characters in the password field may cause issues.")
