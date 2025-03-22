@@ -1,3 +1,6 @@
+### 2025/03/22
+Version "3.0.13" - Fixed EToday to entity which was showing the value of e-total.
+
 ### 2025/03/20
 Version "3.0.2" - Removed ability to post settings back to inverter. Feature will be added later on.
 
