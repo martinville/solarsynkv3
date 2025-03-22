@@ -1,4 +1,7 @@
 ### 2025/03/22
+Version "3.0.15" - Fixed battery capacity typo in entity naming.
+
+### 2025/03/22
 Version "3.0.14" - Fixed EToday to entity which was showing the value of e-total.
 
 ### 2025/03/20
