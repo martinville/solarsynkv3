@@ -225,7 +225,7 @@ def GetGridData(Token,Serial):
             postapi.PostHAEntity(Serial,"","","Grid AC Relays Status","grid_acrelay_status",str(parsed_inverter_json['data']['acRealyStatus']))
             
             postapi.PostHAEntity(Serial,"kWh","energy","Grid Etoday From","grid_etoday_from",str(parsed_inverter_json['data']['etodayFrom']))
-            postapi.PostHAEntity(Serial,"kWh","energy","Grid Etoday To","grid_etotal_to",str(parsed_inverter_json['data']['etodayTo']))
+            postapi.PostHAEntity(Serial,"kWh","energy","Grid Etoday To","grid_etoday_to",str(parsed_inverter_json['data']['etodayTo']))
             
             postapi.PostHAEntity(Serial,"kWh","energy","Grid Etotal From","grid_etotal_from",str(parsed_inverter_json['data']['etotalFrom']))
             postapi.PostHAEntity(Serial,"kWh","energy","Grid Etotal To","grid_etotal_to",str(parsed_inverter_json['data']['etotalTo']))
