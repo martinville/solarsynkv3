@@ -32,6 +32,6 @@ python3 /main.py
 
 
 
-echo "All Done! Waiting " $Refresh_rate " sesonds to rinse and repeat."
+echo "All Done! Waiting " $Refresh_rate " seconds to rinse and repeat."
 sleep $Refresh_rate
 done
