@@ -9,6 +9,7 @@ arch:
   - armhf
   - armv7
   - i386
+url: "https://github.com/martinville/solarsynkv3/tree/main"
   
   
 options:
