@@ -1,4 +1,7 @@
 ### 2025/03/22
+Version "3.0.16" - Fixed another typo in t he log.
+
+### 2025/03/22
 Version "3.0.15" - Fixed battery capacity typo in entity naming.
 
 ### 2025/03/22
