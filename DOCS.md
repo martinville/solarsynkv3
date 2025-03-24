@@ -59,6 +59,7 @@ After each loop, when the integration retrieves the various values, it will also
 When running the integration for the first time, you will see an error message indicating that the entity does not exist, along with instructions on how to create it. However, the integration will also attempt to automatically create the entity. If the automatic creation fails, you can follow the instructions in the log to manually create it.
 
 #### Below is a list of all settings that can be updated
+```json
 {
     "absorptionVolt": "57.6",
     "battMode": "-1",
@@ -101,6 +102,7 @@ When running the integration for the first time, you will see an error message i
     "sn": "123456",
     "tempco": "0"
 }
+```
 
 ## Setting the Settings Entity Value with a Properly Formatted String
 Each setting must be separated by a semicolon (;).
