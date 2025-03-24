@@ -54,7 +54,9 @@ After starting the add-on, verify everything is working by clicking the "Log" ta
 The Solarsynk Home Assistant integration enables you to send settings to your inverter, with support currently limited to updating battery settings.
 
 ### How it works
-After each loop, when the integration retrieves the various values, it will also check the entity named [solarsynkv3_YOUR_INVERTER_SERIAL_NUMBER_settings]. If valid settings are found, it will post them back to the SunSynk Portal.
+After each loop, when the integration retrieves the various values, it will check the entity named [solarsynkv3_YOUR_INVERTER_SERIAL_NUMBER_settings]. If valid settings are found, they will be posted back to the SunSynk Portal.
+
+Once the settings are posted, the settings entity will be cleared to prevent the integration from repeatedly uploading the same settings in a continuous loop.
 
 When running the integration for the first time, you will see an error message indicating that the entity does not exist, along with instructions on how to create it. However, the integration will also attempt to automatically create the entity. If the automatic creation fails, you can follow the instructions in the log to manually create it.
 
