@@ -74,9 +74,15 @@ for serialitem in inverterserials:
             print("--------------------------------------")
             getapi.GetDCACTemp(BearerToken,str(serialitem))
             
+            
             #getapi.GetInverterSerials(BearerToken,str(serialitem))
-            #settingsmanager.DownloadSunSynkSettings(BearerToken,str(serialitem))  
-            #settingsmanager.GetNewSettingsFromHAEntity(BearerToken,str(serialitem)) 
+            
+            settingsmanager.DownloadSunSynkSettings(BearerToken,str(serialitem))  
+            settingsmanager.GetNewSettingsFromHAEntity(BearerToken,str(serialitem)) 
+            
+            #Clear Out Old Settings
+            print("Cleaning out previous settings to prevent it from resending")
+            settingsmanager.ResetSettingsEntity(serialitem)
 
             #source_file = "svr_settings.json"
             #target_file = "battery_settings.json"
