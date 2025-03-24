@@ -103,7 +103,7 @@ def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
         EntSettings = str(parsed_inverter_json['state']).split(";")
         EntSettingsCount = len(EntSettings)
         print("The following settings were found in: " + ConsoleColor.OKCYAN  +  "solarsynkv3_" + Serial + "_settings" + ConsoleColor.ENDC)                
-        if EntSettingsCount >= 3 :
+        if EntSettingsCount > 0 :
             LoopCount=0        
             for EntSetting in EntSettings: 
                 FormatToJSON = "{" + str(EntSetting) + "}"
