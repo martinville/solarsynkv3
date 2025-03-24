@@ -114,6 +114,9 @@ def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
                 #Determine setting type and edit JSON after downloading an populating with existing settings
                 if DetermineSettingCategory(JSON_Key,JSON_Value) == "Valid Battery Setting":
                     PostSettingToSunSynk(SunSynkToken,Serial,"Battery Settings") 
+            else:
+                print("No settings to process")
+            
                 
         
         
