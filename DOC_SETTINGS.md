@@ -52,7 +52,13 @@ When running the integration for the first time, you will see an error message i
     "tempco": "0"
 }
 
+## Setting the Settings Entity Value with a Properly Formatted String
+Each setting must be separated by a semicolon (;).
 
+### Example of a Single Setting:
+"batteryCap": "100"
 
+### Example of Updating Multiple Settings Simultaneously:
+"batteryCap": "100";"batteryLowCap": "35"
 
 
