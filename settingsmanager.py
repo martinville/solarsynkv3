@@ -105,7 +105,7 @@ def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
         LoopCount=0        
         for EntSetting in EntSettings: 
             FormatToJSON = "{" + str(EntSetting) + "}"
-            if FormatToJSON != "{}"
+            if FormatToJSON != "{}":
                 FormatToJSON = json.loads(FormatToJSON)
     
                 JSON_Key = list(FormatToJSON.keys())[0]
