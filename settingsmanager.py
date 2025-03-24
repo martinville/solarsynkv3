@@ -101,18 +101,18 @@ def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
         #print(str(parsed_inverter_json['state']))
         EntSettings = str(parsed_inverter_json['state']).split(";")
         #print("The following settings were found in: " + ConsoleColor.OKCYAN  +  "solarsynkv3_" + Serial + "_settings" + ConsoleColor.ENDC)        
-        
-        LoopCount=0        
-        for EntSetting in EntSettings: 
-            FormatToJSON = "{" + str(EntSetting) + "}"
-            FormatToJSON = json.loads(FormatToJSON)
-
-            JSON_Key = list(FormatToJSON.keys())[0]
-            JSON_Value = FormatToJSON[JSON_Key]
-            #print(JSON_Key  + "-->" + JSON_Value)
-            #Determine setting type and edit JSON after downloading an populating with existing settings
-            if DetermineSettingCategory(JSON_Key,JSON_Value) == "Valid Battery Setting":
-                PostSettingToSunSynk(SunSynkToken,Serial,"Battery Settings") 
+        if EntSetting<>"":
+            LoopCount=0        
+            for EntSetting in EntSettings: 
+                FormatToJSON = "{" + str(EntSetting) + "}"
+                FormatToJSON = json.loads(FormatToJSON)
+    
+                JSON_Key = list(FormatToJSON.keys())[0]
+                JSON_Value = FormatToJSON[JSON_Key]
+                #print(JSON_Key  + "-->" + JSON_Value)
+                #Determine setting type and edit JSON after downloading an populating with existing settings
+                if DetermineSettingCategory(JSON_Key,JSON_Value) == "Valid Battery Setting":
+                    PostSettingToSunSynk(SunSynkToken,Serial,"Battery Settings") 
                 
         
         
