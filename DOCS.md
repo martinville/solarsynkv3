@@ -104,7 +104,7 @@ When running the integration for the first time, you will see an error message i
 }
 ```
 
-## Setting the Settings Entity Value with a Properly Formatted String
+## Setting the settings entity value with a properly formatted string
 Each setting must be separated by a semicolon (;).
 
 ### Example of a Single Setting:
