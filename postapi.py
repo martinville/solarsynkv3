@@ -31,7 +31,7 @@ def PostHAEntity(Serial,UOM,UOMLong,fName,sName,EntityVal):
         #print ("HAToken:" + HAToken)
         #payload = {"attributes": {"unit_of_measurement": f"{UOM}", "friendly_name": f"{fName}"}, "state": f"{EntityVal}"}        
         if UOM == "kWh":
-            payload = {"attributes": {"state_class": "total_increasing","last_reset": "None","device_class": f"{UOMLong}", "state_class":"measurement", "unit_of_measurement": f"{UOM}", "friendly_name": f"{fName}"}, "state": f"{EntityVal}"}
+            payload = {"attributes": {"state_class": "total_increasing", "last_reset": "None","device_class": f"{UOMLong}", "state_class":"measurement", "unit_of_measurement": f"{UOM}", "friendly_name": f"{fName}"}, "state": f"{EntityVal}"}
         else:
             payload = {"attributes": {"device_class": f"{UOMLong}", "state_class":"measurement", "unit_of_measurement": f"{UOM}", "friendly_name": f"{fName}"}, "state": f"{EntityVal}"}
         #print(payload)
