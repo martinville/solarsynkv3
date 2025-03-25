@@ -1,5 +1,5 @@
 ### 2025/03/22
-Version "3.0.18" - Fixed another typo in t he log.
+Version "3.0.18" - Changed all energy entities to include "last_reset":"None" and "state_class":"total_increasing" attributes.
 
 ### 2025/03/24
 Version "3.0.17" - Added ability to send battery settings back to inverter. the following settings can be changed.
