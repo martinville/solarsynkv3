@@ -1,143 +1,94 @@
-def PostHAEntity(Serial,UOM,UOMLong,fName,sName,EntityVal):
-    import json
-    import requests
-    import urllib3
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)    
-    
-    class ConsoleColor:    
-        OKBLUE = "\033[34m"
-        OKCYAN = "\033[36m"
-        OKGREEN = "\033[32m"        
-        MAGENTA = "\033[35m"
-        WARNING = "\033[33m"
-        FAIL = "\033[31m"
-        ENDC = "\033[0m"
-        BOLD = "\033[1m" 
-    
-    with open('/data/options.json') as options_file:
-        json_settings = json.load(options_file)
-        HAToken = json_settings['HA_LongLiveToken']
+import json
+import requests
+import urllib3
+import logging
 
-        if json_settings['Enable_HTTPS']:
-            httpurl_proto = "https"
-        else:
-            httpurl_proto = "http"        
+# Disable SSL warnings
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-            
-        #print(json_settings['Enable_HTTPS'])
-        # API URL
-        url = f"{httpurl_proto}://" + str(json_settings['Home_Assistant_IP']) + ":" + str(json_settings['Home_Assistant_PORT']) + "/api/states/sensor.solarsynkv3_" + Serial + '_' + sName
-        
-        #print ("HAToken:" + HAToken)
-        #payload = {"attributes": {"unit_of_measurement": f"{UOM}", "friendly_name": f"{fName}"}, "state": f"{EntityVal}"}        
-        if UOM == "kWh":
-            payload = {"attributes": {"device_class": f"{UOMLong}", "state_class":"total_increasing", "last_reset":"None", "unit_of_measurement": f"{UOM}", "friendly_name": f"{fName}"}, "state": f"{EntityVal}"}
-        else:
-            payload = {"attributes": {"device_class": f"{UOMLong}", "state_class":"measurement", "unit_of_measurement": f"{UOM}", "friendly_name": f"{fName}"}, "state": f"{EntityVal}"}
-        #print(payload)
-        
-    
-    # Headers
-    headers = {"Content-Type": "application/json","Authorization": f"Bearer {HAToken}"}
+# Configure logging
+logging.basicConfig(filename="ha_api.log", level=logging.INFO, 
+                    format="%(asctime)s - %(levelname)s - %(message)s")
+
+# Console Colors
+class ConsoleColor:    
+    OKBLUE = "\033[34m"
+    OKCYAN = "\033[36m"
+    OKGREEN = "\033[32m"        
+    MAGENTA = "\033[35m"
+    WARNING = "\033[33m"
+    FAIL = "\033[31m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m" 
+
+# Load Home Assistant settings
+def load_settings():
     try:
-        # Send POST request with timeout (10s)
-        response = requests.post(url, json=payload, headers=headers, timeout=10, verify=False)
+        with open('/data/options.json') as options_file:
+            return json.load(options_file)
+    except Exception as e:
+        logging.error(f"Failed to load settings: {e}")
+        print(ConsoleColor.FAIL + "Error loading options.json. Ensure the file exists and is valid JSON." + ConsoleColor.ENDC)
+        return None
 
-        # Raise an exception for HTTP errors (4xx, 5xx)
-        response.raise_for_status()
-        parsed_inverter_json = response.json()
-        # Parse response
-        parsed_login_json = response.json()
-        #print(parsed_inverter_json)
-        # Check login status
-        if len(parsed_login_json['entity_id']) > 1:
-            #print("Sunsynk Login: " + ConsoleColor.OKGREEN + parsed_login_json + ConsoleColor.ENDC)
-            print("HA Entity: " + ConsoleColor.WARNING + parsed_login_json['entity_id'] +":" + ConsoleColor.OKCYAN + f" {EntityVal} {UOM}" + ConsoleColor.ENDC + ConsoleColor.OKGREEN + " OK" + ConsoleColor.ENDC )
-            
-            
+# Unified function to post to Home Assistant API
+def post_to_ha(Serial, UOM, UOMLong, fName, sName, EntityVal, test_mode=False):
+    settings = load_settings()
+    if not settings:
+        return "Settings Load Failed"
 
+    # Set up connection parameters
+    protocol = "https" if settings['Enable_HTTPS'] else "http"
+    ha_url = f"{protocol}://{settings['Home_Assistant_IP']}:{settings['Home_Assistant_PORT']}"
+    entity_url = f"{ha_url}/api/states/sensor.solarsynkv3_{Serial}_{sName}"
+    token = settings['HA_LongLiveToken']
+
+    # Define payload
+    state_class = "total_increasing" if UOM == "kWh" else "measurement"
+    payload = {
+        "attributes": {
+            "device_class": UOMLong,
+            "state_class": state_class,
+            "unit_of_measurement": UOM,
+            "friendly_name": fName
+        },
+        "state": EntityVal
+    }
+
+    # Headers
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {token}"}
+
+    try:
+        # Send POST request with a 10s timeout
+        response = requests.post(entity_url, json=payload, headers=headers, timeout=10, verify=False)
+        response.raise_for_status()  # Raise exception for HTTP errors
+
+        parsed_response = response.json()
+
+        # Check if response contains 'entity_id'
+        if 'entity_id' in parsed_response:
+            print(f"HA Entity: {ConsoleColor.WARNING}{parsed_response['entity_id']}:{ConsoleColor.OKCYAN} {EntityVal} {UOM}{ConsoleColor.ENDC} {ConsoleColor.OKGREEN}OK{ConsoleColor.ENDC}")
+            logging.info(f"HA Entity Updated: {parsed_response['entity_id']} - {EntityVal} {UOM}")
+            return "Connection Success" if test_mode else "Post Success"
         else:
-            print(parsed_inverter_json)
+            logging.warning(f"Unexpected response: {parsed_response}")
+            return "Unexpected Response"
 
     except requests.exceptions.Timeout:
-            print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Home Assistant API." + ConsoleColor.ENDC)
-     
+        logging.error(f"Timeout error while connecting to {entity_url}")
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Home Assistant API." + ConsoleColor.ENDC)
+        return f"Connection Failed using URL: {entity_url}"
 
     except requests.exceptions.RequestException as e:
-            print(ConsoleColor.FAIL + f"Error: Failed to connect to Home Assistant API. {e}" + ConsoleColor.ENDC)
-     
+        logging.error(f"Connection error: {e}")
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Home Assistant API. {e}" + ConsoleColor.ENDC)
+        return f"Connection Failed using URL: {entity_url}"
 
     except json.JSONDecodeError:
-            print(ConsoleColor.FAIL + "Error: Failed to parse Home Assistant API response." + ConsoleColor.ENDC)    
+        logging.error("Failed to parse Home Assistant API response")
+        print(ConsoleColor.FAIL + "Error: Failed to parse Home Assistant API response." + ConsoleColor.ENDC)
+        return f"Connection Failed using URL: {entity_url}"
 
-
-def ConnectionTest(Serial,UOM,UOMLong,fName,sName,EntityVal):
-    import json
-    import requests
-    import urllib3
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)    
-    
-    class ConsoleColor:    
-        OKBLUE = "\033[34m"
-        OKCYAN = "\033[36m"
-        OKGREEN = "\033[32m"        
-        MAGENTA = "\033[35m"
-        WARNING = "\033[33m"
-        FAIL = "\033[31m"
-        ENDC = "\033[0m"
-        BOLD = "\033[1m" 
-    
-    with open('/data/options.json') as options_file:
-        json_settings = json.load(options_file)
-        HAToken = json_settings['HA_LongLiveToken']
-
-        if json_settings['Enable_HTTPS']:
-            httpurl_proto = "https"
-        else:
-            httpurl_proto = "http"        
-
-            
-        #print(json_settings['Enable_HTTPS'])
-        # API URL
-        url = f"{httpurl_proto}://" + str(json_settings['Home_Assistant_IP']) + ":" + str(json_settings['Home_Assistant_PORT']) + "/api/states/sensor.solarsynkv3_" + Serial + '_' + sName
-        
-        #print ("HAToken:" + HAToken)
-        #payload = {"attributes": {"unit_of_measurement": f"{UOM}", "friendly_name": f"{fName}"}, "state": f"{EntityVal}"}        
-        payload = {"attributes": {"device_class": f"{UOMLong}", "state_class":"measurement", "unit_of_measurement": f"{UOM}", "friendly_name": f"{fName}"}, "state": f"{EntityVal}"}
-        #print(payload)
-        
-    
-    # Headers
-    headers = {"Content-Type": "application/json","Authorization": f"Bearer {HAToken}"}
-    try:
-        # Send POST request with timeout (10s)
-        response = requests.post(url, json=payload, headers=headers, timeout=10, verify=False)
-
-        # Raise an exception for HTTP errors (4xx, 5xx)
-        response.raise_for_status()
-        parsed_inverter_json = response.json()
-        # Parse response
-        parsed_login_json = response.json()
-        #print(parsed_inverter_json)
-        # Check login status
-        if len(parsed_login_json['entity_id']) > 1:
-            #print("Sunsynk Login: " + ConsoleColor.OKGREEN + parsed_login_json + ConsoleColor.ENDC)
-            print("HA Entity: " + ConsoleColor.WARNING + parsed_login_json['entity_id'] +":" + ConsoleColor.OKCYAN + f" {EntityVal} {UOM}" + ConsoleColor.ENDC + ConsoleColor.OKGREEN + " OK" + ConsoleColor.ENDC )
-            return "Connection Success"
-            
-
-        else:
-            print(parsed_inverter_json)
-
-    except requests.exceptions.Timeout:
-            print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Home Assistant API." + ConsoleColor.ENDC)
-            return "Connection Failed using URL: " + url
-
-    except requests.exceptions.RequestException as e:
-            print(ConsoleColor.FAIL + f"Error: Failed to connect to Home Assistant API. {e}" + ConsoleColor.ENDC)
-            return "Connection Failed using URL: " + url
-     
-
-    except json.JSONDecodeError:
-            print(ConsoleColor.FAIL + "Error: Failed to parse Home Assistant API response." + ConsoleColor.ENDC) 
-            return "Connection Failed using URL: " + url
+# Function for Connection Test
+def ConnectionTest(Serial, UOM, UOMLong, fName, sName, EntityVal):
+    return post_to_ha(Serial, UOM, UOMLong, fName, sName, EntityVal, test_mode=True)
