@@ -3,12 +3,14 @@ import getapi
 import postapi
 import settingsmanager
 import os
-
-
 import json
 import requests
+import threading
+import logging
+import traceback
+from datetime import datetime
 
-
+# Define console colors for readability
 class ConsoleColor:    
     OKBLUE = "\033[34m"
     OKCYAN = "\033[36m"
@@ -19,91 +21,103 @@ class ConsoleColor:
     ENDC = "\033[0m"
     BOLD = "\033[1m"    
 
-#Get Date Time
-from datetime import datetime
+# Configure logging
+logging.basicConfig(filename="solar_script.log", level=logging.INFO, 
+                    format="%(asctime)s - %(levelname)s - %(message)s")
+
+# Get current date & time
 VarCurrentDate = datetime.now()
-# Load options from JSON file
-with open('/data/options.json') as options_file:
-   json_settings = json.load(options_file)
-    
-#Get Inverter serials to iterate through
+
+# Load settings from JSON file
+try:
+    with open('/data/options.json') as options_file:
+        json_settings = json.load(options_file)
+except Exception as e:
+    logging.error(f"Failed to load settings: {e}")
+    print(ConsoleColor.FAIL + "Error loading settings.json. Ensure the file exists and is valid JSON." + ConsoleColor.ENDC)
+    exit()
+
+# Retrieve inverter serials
 inverterserials = str(json_settings['sunsynk_serial']).split(";")
-for serialitem in inverterserials:    
+
+# Function to safely fetch data using threading
+def fetch_data(api_function, BearerToken, serialitem, description):
+    try:
+        print(f"{ConsoleColor.WARNING}Fetching {description}...{ConsoleColor.ENDC}")
+        api_function(BearerToken, str(serialitem))
+    except Exception as e:
+        logging.error(f"Error fetching {description}: {e}")
+        print(ConsoleColor.FAIL + f"Error fetching {description}: {e}" + ConsoleColor.ENDC)
+        print(traceback.format_exc())
+
+# Iterate through all inverters
+for serialitem in inverterserials:
     print("------------------------------------------------------------------------------")
     print("-- " + ConsoleColor.MAGENTA + f"SolarSynkV3 - Getting {serialitem} @ {VarCurrentDate}" + ConsoleColor.ENDC)
     print("------------------------------------------------------------------------------")    
     print("Script refresh rate set to: " + ConsoleColor.OKCYAN + str(json_settings['Refresh_rate']) + ConsoleColor.ENDC + " milliseconds")
-    BearerToken=gettoken.gettoken()
-    
-    if BearerToken != "" :
-        print("Cleaning cache...")        
-        #os.remove("settings.json")
-        #print(BearerToken)            
-        
-        print(ConsoleColor.WARNING + "Testing HA API" + ConsoleColor.ENDC)
-        varContest = postapi.ConnectionTest("TEST","A","current",f"connection_test",f"connection_test_current","100")
-        if varContest=="Connection Success":
-            print(varContest)
-            
-            print("--------------------------------------")
-            print("--" + ConsoleColor.WARNING + "Getting Inverter Information")
-            print("--------------------------------------")
-            getapi.GetInverterInfo(BearerToken,str(serialitem))
-            print("--------------------------------------")
-            print("--" + ConsoleColor.WARNING + "Getting PV Information")
-            print("--------------------------------------")
-            getapi.GetPvData(BearerToken,str(serialitem))
-            print("--------------------------------------")
-            print("--" +  ConsoleColor.WARNING + "Getting GRID Information")
-            print("--------------------------------------")
-            getapi.GetGridData(BearerToken,str(serialitem))
-            print("--------------------------------------")
-            print("--" +  ConsoleColor.WARNING + "Getting BATTERY Information")
-            print("--------------------------------------")
-            getapi.GetBatteryData(BearerToken,str(serialitem))
-            print("--------------------------------------")
-            print("--" +  ConsoleColor.WARNING + "Getting LOAD Information")
-            print("--------------------------------------")
-            getapi.GetLoadData(BearerToken,str(serialitem))
-            print("--------------------------------------")
-            print("--" +  ConsoleColor.WARNING + "Getting OUTPUT Information")
-            print("--------------------------------------")
-            getapi.GetOutputData(BearerToken,str(serialitem))
-            print("--------------------------------------")
-            print("--" +  ConsoleColor.WARNING + "Getting DC & AC Temperature  Information")
-            print("--------------------------------------")
-            getapi.GetDCACTemp(BearerToken,str(serialitem))
-            
-            
-            #getapi.GetInverterSerials(BearerToken,str(serialitem))
-            
-            settingsmanager.DownloadSunSynkSettings(BearerToken,str(serialitem))  
-            settingsmanager.GetNewSettingsFromHAEntity(BearerToken,str(serialitem)) 
-            
-            #Clear Out Old Settings
-            print("Cleaning out previous settings to prevent it from resending")
-            settingsmanager.ResetSettingsEntity(serialitem)
 
-            #source_file = "svr_settings.json"
-            #target_file = "battery_settings.json"
-            #output_file = "merged_battery_settings.json"        
-            #settingsmanager.merge_json_settings(source_file, target_file, output_file)
-            #DEBUG Read contents of newlybuilt battery_settings file
-            #with open("merged_battery_settings.json", "r") as file:
-            #    content = file.read()
-            #print(content)            
-        else:
-            print(varContest)
-            print(ConsoleColor.MAGENTA + "Ensure you’ve entered the correct IP address and port without http:// or https:// prefixes. If Home Assistant has SSL enabled, be sure to check Enable_HTTPS. If this Docker container is running on a different machine, verify that the Home Assistant server is accessible." + ConsoleColor.ENDC)
-        
+    # Get Bearer Token
+    try:
+        BearerToken = gettoken.gettoken()
+        if not BearerToken:
+            raise ValueError("Failed to retrieve Bearer Token. Check credentials or server status.")
+    except Exception as e:
+        logging.error(f"Token retrieval error: {e}")
+        print(ConsoleColor.FAIL + "Error retrieving Bearer Token." + ConsoleColor.ENDC)
+        print(traceback.format_exc())
+        continue
 
-        
-          
-        
-        
-        
-        VarCurrentDate = datetime.now()
-        print(f"Script completion time: {ConsoleColor.OKBLUE} {VarCurrentDate} {ConsoleColor.ENDC}") 
-        
+    print("Cleaning cache...")
+    settings_file = "settings.json"
+    if os.path.exists(settings_file):
+        os.remove(settings_file)
+        print("Old settings.json file removed.")
+
+    # Test API connection
+    print(ConsoleColor.WARNING + "Testing HA API" + ConsoleColor.ENDC)
+    varContest = postapi.ConnectionTest("TEST", "A", "current", "connection_test", "connection_test_current", "100")
+
+    if varContest == "Connection Success":
+        print(varContest)
+
+        # Define API calls
+        api_calls = [
+            (getapi.GetInverterInfo, "Inverter Information"),
+            (getapi.GetPvData, "PV Data"),
+            (getapi.GetGridData, "Grid Data"),
+            (getapi.GetBatteryData, "Battery Data"),
+            (getapi.GetLoadData, "Load Data"),
+            (getapi.GetOutputData, "Output Data"),
+            (getapi.GetDCACTemp, "DC & AC Temperature Data")
+        ]
+
+        # Start threaded API calls
+        threads = []
+        for api_function, description in api_calls:
+            thread = threading.Thread(target=fetch_data, args=(api_function, BearerToken, serialitem, description))
+            threads.append(thread)
+            thread.start()
+
+        for thread in threads:
+            thread.join()
+
+        print(ConsoleColor.OKGREEN + "All API calls completed successfully!" + ConsoleColor.ENDC)
+
+        # Download and process inverter settings
+        settingsmanager.DownloadSunSynkSettings(BearerToken, str(serialitem))
+        settingsmanager.GetNewSettingsFromHAEntity(BearerToken, str(serialitem))
+
+        # Clear old settings to prevent re-sending
+        print("Cleaning out previous settings...")
+        settingsmanager.ResetSettingsEntity(serialitem)
+
     else:
-        print(f"Something went wrong for inverter serial: {serialitem}. The Sunsynk server may be experiencing an outage, or the user credentials provided could be incorrect. Please verify that your username and password are correct. Note that this add-on cannot connect to your Sunsynk profile if MFA is enabled. Additionally, certain special characters in the password field may cause issues.")
+        print(ConsoleColor.FAIL + varContest + ConsoleColor.ENDC)
+        print(ConsoleColor.MAGENTA + "Ensure correct IP, port, and Home Assistant accessibility." + ConsoleColor.ENDC)
+
+    # Script completion time
+    VarCurrentDate = datetime.now()
+    print(f"Script completion time: {ConsoleColor.OKBLUE} {VarCurrentDate} {ConsoleColor.ENDC}") 
+
+print(ConsoleColor.OKBLUE + "Script execution completed." + ConsoleColor.ENDC)
