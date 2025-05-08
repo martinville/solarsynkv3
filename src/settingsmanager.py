@@ -3,7 +3,8 @@ import requests
 import urllib3
 import os
 
-from config.api import API_PATH_V1, BASE_URL_HOME_ASSISTANT_CORE
+from config.api import API_PATH_V1
+from config.home_assistant import BASE_URL_HOME_ASSISTANT_CORE
 from util.console import ConsoleColor
 
 # Get Home Assistant bearer token

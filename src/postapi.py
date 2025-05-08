@@ -3,7 +3,7 @@ import os
 import requests
 import urllib3
 
-from config.api import BASE_URL_HOME_ASSISTANT_CORE
+from config.home_assistant import BASE_URL_HOME_ASSISTANT_CORE
 from util import home_assistant_options
 from util.console import ConsoleColor
 

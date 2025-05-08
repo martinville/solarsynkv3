@@ -3,8 +3,6 @@ set +e
 
 while :
 do
-CONFIG_PATH=/data/options.json
-
 sunsynk_user=""
 sunsynk_pass=""
 sunsynk_serial=""
