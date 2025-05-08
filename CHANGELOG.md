@@ -1,3 +1,6 @@
+### 2025/05/08
+Version "3.1.0" - Reorganised project code, simplified configuration and added support for generic (unbranded) installations.
+
 ### 2025/03/22
 Version "3.0.18" - Changed all energy entities to include "last_reset":"None" and "state_class":"total_increasing" attributes.
 

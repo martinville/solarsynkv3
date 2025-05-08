@@ -3,42 +3,39 @@ import getapi
 import postapi
 import settingsmanager
 import os
-import json
 import requests
 import threading
 import logging
 import traceback
 from datetime import datetime
 
-# Define console colors for readability
-class ConsoleColor:    
-    OKBLUE = "\033[34m"
-    OKCYAN = "\033[36m"
-    OKGREEN = "\033[32m"        
-    MAGENTA = "\033[35m"
-    WARNING = "\033[33m"
-    FAIL = "\033[31m"
-    ENDC = "\033[0m"
-    BOLD = "\033[1m"    
+from config.api import SOLAR_BASE_URLS
+from util import solar_sync_logging, home_assistant_options
+from util.console import ConsoleColor
 
-# Configure logging
-logging.basicConfig(filename="solar_script.log", level=logging.INFO, 
-                    format="%(asctime)s - %(levelname)s - %(message)s")
+# Configure logging to
+solar_sync_logging.configure()
 
-# Get current date & time
-VarCurrentDate = datetime.now()
+# Get options
+options = home_assistant_options.get()
 
-# Load settings from JSON file
-try:
-    with open('/data/options.json') as options_file:
-        json_settings = json.load(options_file)
-except Exception as e:
-    logging.error(f"Failed to load settings: {e}")
-    print(ConsoleColor.FAIL + "Error loading settings.json. Ensure the file exists and is valid JSON." + ConsoleColor.ENDC)
-    exit()
+# Determine base URL based on data source
+data_source=options["data_source"]
+base_url=SOLAR_BASE_URLS.get(data_source)
 
 # Retrieve inverter serials
-inverterserials = str(json_settings['sunsynk_serial']).split(";")
+inverter_serials = str(options['sunsynk_serial']).split(";")
+
+# Get Bearer Token
+try:
+    BearerToken = gettoken.gettoken(base_url, options['sunsynk_user'], options['sunsynk_pass'])
+    if not BearerToken:
+        raise ValueError("Failed to retrieve Bearer Token. Check credentials or server status.")
+except Exception as e:
+    logging.error(f"Token retrieval error: {e}")
+    print(ConsoleColor.FAIL + "Error retrieving Bearer Token." + ConsoleColor.ENDC)
+    print(traceback.format_exc())
+    exit(1)
 
 # Function to safely fetch data using threading
 def fetch_data(api_function, BearerToken, serialitem, description):
@@ -51,22 +48,12 @@ def fetch_data(api_function, BearerToken, serialitem, description):
         print(traceback.format_exc())
 
 # Iterate through all inverters
-for serialitem in inverterserials:
+timestamp = datetime.now()
+for serialitem in inverter_serials:
     print("------------------------------------------------------------------------------")
-    print("-- " + ConsoleColor.MAGENTA + f"SolarSynkV3 - Getting {serialitem} @ {VarCurrentDate}" + ConsoleColor.ENDC)
+    print("-- " + ConsoleColor.MAGENTA + f"SolarSynkV3 - Getting {serialitem} @ {timestamp}" + ConsoleColor.ENDC)
     print("------------------------------------------------------------------------------")    
-    print("Script refresh rate set to: " + ConsoleColor.OKCYAN + str(json_settings['Refresh_rate']) + ConsoleColor.ENDC + " milliseconds")
-
-    # Get Bearer Token
-    try:
-        BearerToken = gettoken.gettoken()
-        if not BearerToken:
-            raise ValueError("Failed to retrieve Bearer Token. Check credentials or server status.")
-    except Exception as e:
-        logging.error(f"Token retrieval error: {e}")
-        print(ConsoleColor.FAIL + "Error retrieving Bearer Token." + ConsoleColor.ENDC)
-        print(traceback.format_exc())
-        continue
+    print("Script refresh rate set to: " + ConsoleColor.OKCYAN + str(options['Refresh_rate']) + ConsoleColor.ENDC + " milliseconds")
 
     print("Cleaning cache...")
     settings_file = "settings.json"
@@ -105,8 +92,8 @@ for serialitem in inverterserials:
         print(ConsoleColor.OKGREEN + "All API calls completed successfully!" + ConsoleColor.ENDC)
 
         # Download and process inverter settings
-        settingsmanager.DownloadSunSynkSettings(BearerToken, str(serialitem))
-        settingsmanager.GetNewSettingsFromHAEntity(BearerToken, str(serialitem))
+        settingsmanager.DownloadSunSynkSettings(base_url, BearerToken, str(serialitem))
+        settingsmanager.GetNewSettingsFromHAEntity(base_url, BearerToken, str(serialitem))
 
         # Clear old settings to prevent re-sending
         print("Cleaning out previous settings...")
@@ -117,7 +104,7 @@ for serialitem in inverterserials:
         print(ConsoleColor.MAGENTA + "Ensure correct IP, port, and Home Assistant accessibility." + ConsoleColor.ENDC)
 
     # Script completion time
-    VarCurrentDate = datetime.now()
-    print(f"Script completion time: {ConsoleColor.OKBLUE} {VarCurrentDate} {ConsoleColor.ENDC}") 
+    timestamp = datetime.now()
+    print(f"Script completion time: {ConsoleColor.OKBLUE} {timestamp} {ConsoleColor.ENDC}")
 
 print(ConsoleColor.OKBLUE + "Script execution completed." + ConsoleColor.ENDC)

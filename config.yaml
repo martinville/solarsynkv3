@@ -10,24 +10,19 @@ arch:
   - armv7
   - i386
 url: "https://github.com/martinville/solarsynkv3/tree/main"
+homeassistant_api: true
   
   
 options:
   sunsynk_user: ""
   sunsynk_pass: ""
   sunsynk_serial: ""
-  Home_Assistant_IP: ""
-  Home_Assistant_PORT: 8123
-  HA_LongLiveToken: ""
   Refresh_rate: 300
-  Enable_HTTPS: false  
+  data_source: "sunsynk"
   
 schema:
   sunsynk_user: str
   sunsynk_pass: password
   sunsynk_serial: str
-  Home_Assistant_IP: str
-  Home_Assistant_PORT: int
-  HA_LongLiveToken: password
   Refresh_rate: int
-  Enable_HTTPS: bool
+  data_source: "list(sunsync|generic)"
