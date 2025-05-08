@@ -25,4 +25,4 @@ schema:
   sunsynk_pass: password
   sunsynk_serial: str
   Refresh_rate: int
-  data_source: "list(sunsync|generic)"
+  data_source: "list(sunsynk|generic)"
