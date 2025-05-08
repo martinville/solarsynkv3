@@ -9,11 +9,8 @@ WORKDIR /data
 
 # Copy data for add-on
 COPY run.sh /
-COPY src/main.py /
-COPY src/getapi.py /
-COPY src/gettoken.py /
-COPY src/postapi.py /
-COPY src/settingsmanager.py /
+COPY config /config
+COPY src /src
 
 
 
