@@ -82,7 +82,7 @@ for serialitem in inverter_serials:
         # Start threaded API calls
         threads = []
         for api_function, description in api_calls:
-            thread = threading.Thread(target=fetch_data, args=(api_function, base_url, BearerToken, serialitem, description))
+            thread = threading.Thread(target=fetch_data, args=(api_function, base_url, BearerToken, serialitem))
             threads.append(thread)
             thread.start()
 
