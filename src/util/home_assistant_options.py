@@ -2,7 +2,7 @@ import json
 import os
 import logging
 
-from console import ConsoleColor
+from .console import ConsoleColor
 
 
 def get():
