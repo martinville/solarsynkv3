@@ -7,10 +7,10 @@ import requests
 import threading
 import logging
 import traceback
+import util.solar_sync_logging as solar_sync_logging
+import util.home_assistant_options as home_assistant_options
 from datetime import datetime
-
 from config.api import SOLAR_BASE_URLS
-from util import solar_sync_logging, home_assistant_options
 from util.console import ConsoleColor
 
 # Configure logging to

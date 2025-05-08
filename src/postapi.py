@@ -2,9 +2,9 @@ import json
 import os
 import requests
 import urllib3
+import util.home_assistant_options as home_assistant_options
 
 from config.api import BASE_URL_HOME_ASSISTANT_CORE
-from util import home_assistant_options
 from util.console import ConsoleColor
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
