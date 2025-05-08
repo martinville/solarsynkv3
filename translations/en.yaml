@@ -6,8 +6,8 @@ configuration:
     name: Sunsynk Password
     description: Enter the password that you use to login to the sunsynk.net portal.   
   sunsynk_serial:
-    name: Sunsynk Inverter Serial Number
-    description: You can find your inverter serial number under menu "Equipment" -> "Inverter" in the synsynk portal. 
+    name: Sunsynk Inverter Serial Number(s)
+    description: You can find your inverter serial number under menu "Equipment" -> "Inverter" in the synsynk portal. To download from multiple inverters, separate each serial number with a semicolon. e.g. 1234;4567
   Home_Assistant_IP:
     name: Homeassistant Hostname or IP Address
     description: Homeassistant ip or hostname. Please do not use a loopback address such as localhost, 127.0.0.1. And do not prefix the address with http:// or https://
@@ -22,4 +22,7 @@ configuration:
     description: This script will attempt to fetch inverter data based on this interval in seconds. Its advisable to enter the same refresh rate that you have set in the sunsynk portal under menu. "Equipment" -> "Gateway" -> "Settings"
   Enable_HTTPS:
     name: Enable HTTPS
-    description: If your Homeassistant server was setup to use HTTPS then you need to trun this setting on.
+    description: If your Homeassistant server was setup to use HTTPS then you need to turn this setting on.
+  data_source:
+    name: Source of the solar data
+    description: In most cases you can leave this as sunsync. If authentication fails but you are sure your username and password is correct, then try generic
