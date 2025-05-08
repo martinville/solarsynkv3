@@ -1,8 +1,8 @@
 import json
 import logging
 
-from .console import ConsoleColor
-from ..config.home_assistant import OPTIONS_JSON_PATH_HOME_ASSISTANT
+from src.util.console import ConsoleColor
+from src.config.home_assistant import OPTIONS_JSON_PATH_HOME_ASSISTANT
 
 
 def get():
