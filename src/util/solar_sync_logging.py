@@ -1,6 +1,6 @@
 import logging
 
-from src.config.logging import LOG_FILE_NAME
+from config.logging import LOG_FILE_NAME
 
 # Configure logging to file
 def configure():

@@ -4,8 +4,8 @@ import requests
 import urllib3
 
 from config.api import BASE_URL_HOME_ASSISTANT_CORE
-from src.util import home_assistant_options
-from src.util.console import ConsoleColor
+from util import home_assistant_options
+from util.console import ConsoleColor
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 

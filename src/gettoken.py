@@ -1,7 +1,7 @@
 import json
 import requests
 from config.api import TOKEN_PATH
-from src.util.console import ConsoleColor
+from util.console import ConsoleColor
 
 
 def gettoken(base_url, username, password):
