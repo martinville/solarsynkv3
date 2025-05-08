@@ -9,8 +9,6 @@ WORKDIR /data
 
 # Copy data for add-on
 COPY run.sh /
-COPY application.py /
-COPY config /config
 COPY src /src
 
 

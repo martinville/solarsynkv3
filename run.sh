@@ -18,7 +18,8 @@ VarCurrentDate=$(date +%Y-%m-%d)
 
 clear
 
-python3 /application.py
+cd /src
+python3 main.py
 
 
 
