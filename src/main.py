@@ -38,10 +38,10 @@ except Exception as e:
     exit(1)
 
 # Function to safely fetch data using threading
-def fetch_data(api_function, BearerToken, serialitem, description):
+def fetch_data(api_function, base_url, BearerToken, serialitem, description):
     try:
         print(f"{ConsoleColor.WARNING}Fetching {description}...{ConsoleColor.ENDC}")
-        api_function(BearerToken, str(serialitem))
+        api_function(base_url, BearerToken, str(serialitem))
     except Exception as e:
         logging.error(f"Error fetching {description}: {e}")
         print(ConsoleColor.FAIL + f"Error fetching {description}: {e}" + ConsoleColor.ENDC)
@@ -82,7 +82,7 @@ for serialitem in inverter_serials:
         # Start threaded API calls
         threads = []
         for api_function, description in api_calls:
-            thread = threading.Thread(target=fetch_data, args=(api_function, base_url, BearerToken, serialitem))
+            thread = threading.Thread(target=fetch_data, args=(api_function, base_url, BearerToken, serialitem, description))
             threads.append(thread)
             thread.start()
 
