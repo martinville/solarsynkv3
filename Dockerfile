@@ -9,7 +9,7 @@ WORKDIR /data
 
 # Copy data for add-on
 COPY run.sh /
-COPY config /config
+COPY src/config /config
 COPY src /src
 
 
