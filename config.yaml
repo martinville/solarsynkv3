@@ -10,10 +10,9 @@ arch:
   - armv7
   - i386
 url: "https://github.com/martinville/solarsynkv3/tree/main"
-panel_icon: mdi:cog
+
   
-options:
-  api_server: "api.sunsynk.net"
+options:  
   sunsynk_user: ""
   sunsynk_pass: ""
   sunsynk_serial: ""
@@ -22,6 +21,7 @@ options:
   HA_LongLiveToken: ""
   Refresh_rate: 300
   Enable_HTTPS: false  
+  api_server: "api.sunsynk.net"
   
 schema:  
   sunsynk_user: str
