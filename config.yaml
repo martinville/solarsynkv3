@@ -10,7 +10,7 @@ arch:
   - armv7
   - i386
 url: "https://github.com/martinville/solarsynkv3/tree/main"
-
+panel_icon: mdi:cog
   
 options:
   api_server: "api.sunsynk.net"
