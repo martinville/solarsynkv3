@@ -7,7 +7,7 @@ configuration:
     description: Enter the password that you use to login to the sunsynk.net portal.   
   sunsynk_serial:
     name: Sunsynk Inverter Serial Number
-    description: You can find your inverter serial number under menu "Equipment" -> "Inverter" in the synsynk portal. You can enter multiple serial numbers by seperating them with a semicolon. Example: 123456;987654
+    description: You can find your inverter serial number under menu "Equipment" -> "Inverter" in the synsynk portal. 
   Home_Assistant_IP:
     name: Homeassistant Hostname or IP Address
     description: Homeassistant ip or hostname. Please do not use a loopback address such as localhost, 127.0.0.1. And do not prefix the address with http:// or https://
@@ -23,6 +23,3 @@ configuration:
   Enable_HTTPS:
     name: Enable HTTPS
     description: If your Homeassistant server was setup to use HTTPS then you need to trun this setting on.
-  api_server:
-    name: Select API Endpoint
-    description: Select a valid endpoint for your inverter. Use the elinter option for generic inverters.
