@@ -35,7 +35,6 @@ try:
 except Exception as e:
     logging.error(f"Failed to load settings: {e}")
     print(ConsoleColor.FAIL + "Error loading settings.json. Ensure the file exists and is valid JSON." + ConsoleColor.ENDC)
-    print(ConsoleColor.OKBLUE + "Script execution completed." + ConsoleColor.ENDC)
     exit()
 
 # Retrieve inverter serials
@@ -51,39 +50,23 @@ def fetch_data(api_function, BearerToken, serialitem, description):
         print(ConsoleColor.FAIL + f"Error fetching {description}: {e}" + ConsoleColor.ENDC)
         print(traceback.format_exc())
 
-print("------------------------------------------------------------------------------")
-print("-- " + ConsoleColor.MAGENTA + "Running Script SolarSynkV3" + ConsoleColor.ENDC)
-print("------------------------------------------------------------------------------")  
-# Get Bearer Token
-try:
-    BearerToken = gettoken.gettoken()
-    if not BearerToken:
-        #raise ValueError("Failed to retrieve Bearer Token. Check credentials or server status.")
-        print("Failed to retrieve Bearer Token. Check credentials or server status. Most of the time this due to the server not being available.")
-except Exception as e:
-    logging.error(f"Token retrieval error: {e}")
-    print(ConsoleColor.FAIL + "Error retrieving Bearer Token." + ConsoleColor.ENDC)
-    print(traceback.format_exc())
-    exit()
-    
-
 # Iterate through all inverters
-for serialitem in inverterserials:    
-    print(ConsoleColor.MAGENTA + f"SolarSynkV3 - Getting {serialitem} @ {VarCurrentDate}" + ConsoleColor.ENDC)     
+for serialitem in inverterserials:
+    print("------------------------------------------------------------------------------")
+    print("-- " + ConsoleColor.MAGENTA + f"SolarSynkV3 - Getting {serialitem} @ {VarCurrentDate}" + ConsoleColor.ENDC)
+    print("------------------------------------------------------------------------------")    
     print("Script refresh rate set to: " + ConsoleColor.OKCYAN + str(json_settings['Refresh_rate']) + ConsoleColor.ENDC + " milliseconds")
 
     # Get Bearer Token
-    #try:
-    #    BearerToken = gettoken.gettoken()
-    #    if not BearerToken:
-    #        #raise ValueError("Failed to retrieve Bearer Token. Check credentials or server status.")
-    #        print("Failed to retrieve Bearer Token. Check credentials or server status. 99% of the time this error is caused by the provider who do not care about their customers and do not take uptime serious ;-)")
-    #except Exception as e:
-    #    logging.error(f"Token retrieval error: {e}")
-    #    print(ConsoleColor.FAIL + "Error retrieving Bearer Token." + ConsoleColor.ENDC)
-    #    print(traceback.format_exc())
-    #    exit()
-    #    continue
+    try:
+        BearerToken = gettoken.gettoken()
+        if not BearerToken:
+            raise ValueError("Failed to retrieve Bearer Token. Check credentials or server status.")
+    except Exception as e:
+        logging.error(f"Token retrieval error: {e}")
+        print(ConsoleColor.FAIL + "Error retrieving Bearer Token." + ConsoleColor.ENDC)
+        print(traceback.format_exc())
+        continue
 
     print("Cleaning cache...")
     settings_file = "settings.json"
