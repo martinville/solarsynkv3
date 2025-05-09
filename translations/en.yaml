@@ -23,3 +23,6 @@ configuration:
   Enable_HTTPS:
     name: Enable HTTPS
     description: If your Homeassistant server was setup to use HTTPS then you need to trun this setting on.
+  api_server:
+    name: Select API Endpoint
+    description: Select a valid endpoint for your inverter. Use the elinter option for generic inverters.
