@@ -10,7 +10,9 @@ arch:
   - armv7
   - i386
 url: "https://github.com/martinville/solarsynkv3/tree/main"
-  
+
+logo: logo.png
+icon: icon.png  
   
 options:
   sunsynk_user: ""
