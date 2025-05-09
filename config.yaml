@@ -32,8 +32,3 @@ schema:
   HA_LongLiveToken: password
   Refresh_rate: int
   Enable_HTTPS: bool
-  
-
-# Visual assets (stored in www/)
-logo: logo.png
-icon: icon.png
