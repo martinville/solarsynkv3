@@ -35,5 +35,5 @@ schema:
   api_server: list(api.sunsynk.net|pv.inteless.com)
 
 # Visual assets (stored in www/)
-logo: www/logo.png
-icon: www/icon.png
+logo: /www/logo.png
+icon: /www/icon.png
