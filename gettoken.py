@@ -15,17 +15,20 @@ def gettoken():
 
     with open('/data/options.json') as options_file:
        json_settings = json.load(options_file)
-    # API URL
-    url = 'https://api.sunsynk.net/oauth/token'
+    # API URL    
+    #url = 'https://pv.inteless.com/oauth/token'
+    #url = 'https://api.sunsynk.net/oauth/token'
+    url = 'https://' + json_settings["api_server"] + '/oauth/token'
+    print("Server API: " + ConsoleColor.OKCYAN +  url + ConsoleColor.ENDC)
     # Prepare request payload
-    payload = {
-        "areaCode": "sunsynk",
+    payload = {        
         "client_id": "csp-web",
         "grant_type": "password",
         "password": json_settings['sunsynk_pass'],
         "source": "sunsynk",
         "username": json_settings['sunsynk_user']
     }
+    
     # Headers
     headers = {"Content-Type": "application/json"}    
     try:
