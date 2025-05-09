@@ -61,7 +61,9 @@ for serialitem in inverterserials:
     try:
         BearerToken = gettoken.gettoken()
         if not BearerToken:
-            raise ValueError("Failed to retrieve Bearer Token. Check credentials or server status.")
+            #raise ValueError("Failed to retrieve Bearer Token. Check credentials or server status.")
+            print("Failed to retrieve Bearer Token. Check credentials or server status.")
+            exit()
     except Exception as e:
         logging.error(f"Token retrieval error: {e}")
         print(ConsoleColor.FAIL + "Error retrieving Bearer Token." + ConsoleColor.ENDC)
