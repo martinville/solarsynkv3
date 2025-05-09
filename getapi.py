@@ -1,3 +1,5 @@
+#pv.inteless.com
+#api.ssunsynk.net
 import postapi
 
 def GetInverterInfo(Token,Serial):
@@ -13,9 +15,14 @@ def GetInverterInfo(Token,Serial):
         FAIL = "\033[31m"
         ENDC = "\033[0m"
         BOLD = "\033[1m" 
-        
+    
+
+    #Get Settings
+    with open('/data/options.json') as options_file:
+       json_settings = json.load(options_file)
+       
     # Inverter URL
-    inverter_url = f"https://api.sunsynk.net/api/v1/inverter/{Serial}"
+    inverter_url = f"https://{json_settings["api_server"]}/api/v1/inverter/{Serial}"
     # Headers (Fixed Bearer token format)
     headers = {
         "Content-Type": "application/json",
@@ -78,13 +85,13 @@ def GetInverterInfo(Token,Serial):
             print("Inverter fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Inverter Provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Inverter Provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Failed to parse Inverter Provider API response." + ConsoleColor.ENDC)
 
 def GetPvData(Token,Serial):
     import json
@@ -100,10 +107,13 @@ def GetPvData(Token,Serial):
         FAIL = "\033[31m"
         ENDC = "\033[0m"
         BOLD = "\033[1m" 
-        
-    # Inverter URL
-    #curl -s -k -X GET -H "Content-Type: application/json" -H "authorization: Bearer $ServerAPIBearerToken" https://api.sunsynk.net/api/v1/inverter/$inverter_serial/realtime/input
-    inverter_url = f"https://api.sunsynk.net/api/v1/inverter/{Serial}/realtime/input"
+    
+    #Get Settings
+    with open('/data/options.json') as options_file:
+       json_settings = json.load(options_file)
+     
+    # Inverter URL    
+    inverter_url = f"https://{json_settings["api_server"]}/api/v1/inverter/{Serial}/realtime/input"    
     # Headers (Fixed Bearer token format)
     headers = {
         "Content-Type": "application/json",
@@ -151,13 +161,13 @@ def GetPvData(Token,Serial):
             print("PV data fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Inverter Provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Inverter Provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)        
+        print(ConsoleColor.FAIL + "Error: Failed to parse Inverter Provider API response." + ConsoleColor.ENDC)        
 
 def GetGridData(Token,Serial):
     import json
@@ -172,10 +182,12 @@ def GetGridData(Token,Serial):
         FAIL = "\033[31m"
         ENDC = "\033[0m"
         BOLD = "\033[1m"  
-        
-    # Inverter URL
-    #curl -s -k -X GET -H "Content-Type: application/json" -H "authorization: Bearer $ServerAPIBearerToken" https://api.sunsynk.net/api/v1/inverter/grid/$inverter_serial/realtime?sn=$inverter_serial -o "griddata.json"
-    inverter_url = f"https://api.sunsynk.net/api/v1/inverter/grid/{Serial}/realtime?sn={Serial}"
+    
+    #Get Settings
+    with open('/data/options.json') as options_file:
+       json_settings = json.load(options_file)    
+    # Inverter URL    
+    inverter_url = f"https://{json_settings["api_server"]}/api/v1/inverter/grid/{Serial}/realtime?sn={Serial}"
     # Headers (Fixed Bearer token format)
     headers = {
         "Content-Type": "application/json",
@@ -240,13 +252,13 @@ def GetGridData(Token,Serial):
             print("Grid data fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Inverter Provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Inverter Provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)                
+        print(ConsoleColor.FAIL + "Error: Failed to parse Inverter Provider API response." + ConsoleColor.ENDC)                
 
 def GetBatteryData(Token,Serial):
     import json
@@ -261,10 +273,11 @@ def GetBatteryData(Token,Serial):
         FAIL = "\033[31m"
         ENDC = "\033[0m"
         BOLD = "\033[1m"  
-        
-    # Inverter URL
-    #curl -s -k -X GET -H "Content-Type: application/json" -H "authorization: Bearer $ServerAPIBearerToken" "https://api.sunsynk.net/api/v1/inverter/battery/$inverter_serial/realtime?sn=$inverter_serial&lan=en" -o "batterydata.json"
-    inverter_url = f"https://api.sunsynk.net/api/v1/inverter/battery/{Serial}/realtime?sn={Serial}&lan=en"
+    #Get Settings
+    with open('/data/options.json') as options_file:
+       json_settings = json.load(options_file)          
+    # Inverter URL    
+    inverter_url = f"https://{json_settings["api_server"]}/api/v1/inverter/battery/{Serial}/realtime?sn={Serial}&lan=en"
     # Headers (Fixed Bearer token format)
     headers = {
         "Content-Type": "application/json",
@@ -277,6 +290,7 @@ def GetBatteryData(Token,Serial):
         response.raise_for_status()
 
         parsed_inverter_json = response.json()
+        #print(response.json())
 
         if parsed_inverter_json.get('msg') == "Success": 
             #print(parsed_inverter_json)
@@ -400,13 +414,13 @@ def GetBatteryData(Token,Serial):
             print("Battery data fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Inverter Provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Inverter Provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)         
+        print(ConsoleColor.FAIL + "Error: Failed to parse Inverter Provider API response." + ConsoleColor.ENDC)         
         
 def GetLoadData(Token,Serial):
     import json
@@ -421,10 +435,11 @@ def GetLoadData(Token,Serial):
         FAIL = "\033[31m"
         ENDC = "\033[0m"
         BOLD = "\033[1m" 
-        
-    # Inverter URL
-    #curl -s -k -X GET -H "Content-Type: application/json" -H "authorization: Bearer $ServerAPIBearerToken" https://api.sunsynk.net/api/v1/inverter/load/$inverter_serial/realtime?sn=$inverter_serial -o "loaddata.json"
-    inverter_url = f"https://api.sunsynk.net/api/v1/inverter/load/{Serial}/realtime?sn={Serial}"
+    #Get Settings
+    with open('/data/options.json') as options_file:
+       json_settings = json.load(options_file)          
+    # Inverter URL    
+    inverter_url = f"https://{json_settings["api_server"]}/api/v1/inverter/load/{Serial}/realtime?sn={Serial}"
     # Headers (Fixed Bearer token format)
     headers = {
         "Content-Type": "application/json",
@@ -479,13 +494,13 @@ def GetLoadData(Token,Serial):
             print("Load data fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Inverter Provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Inverter Provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)          
+        print(ConsoleColor.FAIL + "Error: Failed to parse Inverter Provider API response." + ConsoleColor.ENDC)          
         
 def GetOutputData(Token,Serial):
     import json
@@ -500,10 +515,11 @@ def GetOutputData(Token,Serial):
         FAIL = "\033[31m"
         ENDC = "\033[0m"
         BOLD = "\033[1m" 
-        
-    # Inverter URL
-    #curl -s -k -X GET -H "Content-Type: application/json" -H "authorization: Bearer $ServerAPIBearerToken" https://api.sunsynk.net/api/v1/inverter/$inverter_serial/realtime/output -o "outputdata.json"
-    inverter_url = f"https://api.sunsynk.net/api/v1/inverter/{Serial}/realtime/output"
+    #Get Settings
+    with open('/data/options.json') as options_file:
+       json_settings = json.load(options_file)          
+    # Inverter URL    
+    inverter_url = f"https://{json_settings["api_server"]}/api/v1/inverter/{Serial}/realtime/output"
     # Headers (Fixed Bearer token format)
     headers = {
         "Content-Type": "application/json",
@@ -545,13 +561,13 @@ def GetOutputData(Token,Serial):
             print("Output data fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Inverter Provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Inverter Provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)         
+        print(ConsoleColor.FAIL + "Error: Failed to parse Inverter Provider API response." + ConsoleColor.ENDC)         
 
 def GetDCACTemp(Token,Serial):
     import json
@@ -567,12 +583,13 @@ def GetDCACTemp(Token,Serial):
         FAIL = "\033[31m"
         ENDC = "\033[0m"
         BOLD = "\033[1m" 
-        
-    # Inverter URL
-    #curl -s -k -X GET -H "Content-Type: application/json" -H "authorization: Bearer $ServerAPIBearerToken" "https://api.sunsynk.net/api/v1/inverter/$inverter_serial/output/day?lan=en&date=$VarCurrentDate&column=dc_temp,igbt_temp" -o "dcactemp.json"
+    #Get Settings
+    with open('/data/options.json') as options_file:
+       json_settings = json.load(options_file)          
+    # Inverter URL    
     VarCurrentDate = datetime.today().strftime('%Y-%m-%d')
     #print(VarCurrentDate)
-    inverter_url = f"https://api.sunsynk.net/api/v1/inverter/{Serial}/output/day?lan=en&date={VarCurrentDate}&column=dc_temp,igbt_temp"
+    inverter_url = f"https://{json_settings["api_server"]}/api/v1/inverter/{Serial}/output/day?lan=en&date={VarCurrentDate}&column=dc_temp,igbt_temp"
     # Headers (Fixed Bearer token format)
     headers = {
         "Content-Type": "application/json",
@@ -605,12 +622,12 @@ def GetDCACTemp(Token,Serial):
             print("Inverter data fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Inverter Provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Inverter Provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)         
+        print(ConsoleColor.FAIL + "Error: Failed to parse Inverter Provider API response." + ConsoleColor.ENDC)         
 
 
