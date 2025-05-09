@@ -23,6 +23,3 @@ configuration:
   Enable_HTTPS:
     name: Enable HTTPS
     description: If your Homeassistant server was setup to use HTTPS then you need to trun this setting on.
-  api_server:
-    name: Select API Endpoint
-    description: Select Sunsynk if you make use of a synsynk inverter, else select elinter for generic inverters that make use of an elinter dongle.
