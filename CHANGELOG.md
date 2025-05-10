@@ -1,5 +1,5 @@
 ### 2025/03/22
-Version "3.0.19" - Added option to select pv.inteless.com as an alternative API endpoint for generic E-Linterbased inverters.
+Version "3.0.19" - Added option to select pv.inteless.com as an alternative API endpoint for generic E-Linterbased inverters. (Experimental)
 
 ### 2025/03/22
 Version "3.0.18" - Changed all energy entities to include "last_reset":"None" and "state_class":"total_increasing" attributes.
