@@ -7,7 +7,7 @@ configuration:
     description: Enter the password that you use to login to the sunsynk.net portal.   
   sunsynk_serial:
     name: Sunsynk Inverter Serial Number
-    description: You can find your inverter serial number under menu "Equipment" -> "Inverter" in the synsynk portal. 
+    description: You can find your inverter serial number under menu "Equipment" -> "Inverter" in the synsynk portal. You can enter multiple serials by seperating them with a semi colon. Example Serial1;Serial2
   Home_Assistant_IP:
     name: Homeassistant Hostname or IP Address
     description: Homeassistant ip or hostname. Please do not use a loopback address such as localhost, 127.0.0.1. And do not prefix the address with http:// or https://
