@@ -1,21 +1,32 @@
 import postapi
+import json
+import requests
+from datetime import datetime
 
-def GetInverterInfo(Token,Serial):
-    import json
-    import requests
+class ConsoleColor:    
+    OKBLUE = "\033[34m"
+    OKCYAN = "\033[36m"
+    OKGREEN = "\033[32m"        
+    MAGENTA = "\033[35m"
+    WARNING = "\033[33m"
+    FAIL = "\033[31m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m" 
+
+# Load settings from JSON file
+try:
+    with open('/data/options.json') as options_file:
+        json_settings = json.load(options_file)
+        api_server = json_settings['API_Server']
+except Exception as e:
+    logging.error(f"Failed to load settings: {e}")
+    print(ConsoleColor.FAIL + "Error loading settings.json. Ensure the file exists and is valid JSON." + ConsoleColor.ENDC)
+    exit()
     
-    class ConsoleColor:    
-        OKBLUE = "\033[34m"
-        OKCYAN = "\033[36m"
-        OKGREEN = "\033[32m"        
-        MAGENTA = "\033[35m"
-        WARNING = "\033[33m"
-        FAIL = "\033[31m"
-        ENDC = "\033[0m"
-        BOLD = "\033[1m" 
-        
+def GetInverterInfo(Token,Serial):    
+    global api_server         
     # Inverter URL
-    inverter_url = f"https://api.sunsynk.net/api/v1/inverter/{Serial}"
+    inverter_url = f"https://{api_server}/api/v1/inverter/{Serial}"
     # Headers (Fixed Bearer token format)
     headers = {
         "Content-Type": "application/json",
@@ -78,32 +89,19 @@ def GetInverterInfo(Token,Serial):
             print("Inverter fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Service Provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Service Provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Failed to parse Service Provider API response." + ConsoleColor.ENDC)
 
-def GetPvData(Token,Serial):
-    import json
-    import requests
-    
-    
-    class ConsoleColor:    
-        OKBLUE = "\033[34m"
-        OKCYAN = "\033[36m"
-        OKGREEN = "\033[32m"        
-        MAGENTA = "\033[35m"
-        WARNING = "\033[33m"
-        FAIL = "\033[31m"
-        ENDC = "\033[0m"
-        BOLD = "\033[1m" 
-        
+def GetPvData(Token,Serial):    
+    global api_server    
     # Inverter URL
-    #curl -s -k -X GET -H "Content-Type: application/json" -H "authorization: Bearer $ServerAPIBearerToken" https://api.sunsynk.net/api/v1/inverter/$inverter_serial/realtime/input
-    inverter_url = f"https://api.sunsynk.net/api/v1/inverter/{Serial}/realtime/input"
+    #curl -s -k -X GET -H "Content-Type: application/json" -H "authorization: Bearer $ServerAPIBearerToken" https://{api_server}/api/v1/inverter/$inverter_serial/realtime/input
+    inverter_url = f"https://{api_server}/api/v1/inverter/{Serial}/realtime/input"
     # Headers (Fixed Bearer token format)
     headers = {
         "Content-Type": "application/json",
@@ -151,31 +149,17 @@ def GetPvData(Token,Serial):
             print("PV data fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Service Provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Service Provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)        
+        print(ConsoleColor.FAIL + "Error: Failed to parse Service Provider API response." + ConsoleColor.ENDC)        
 
-def GetGridData(Token,Serial):
-    import json
-    import requests
-    
-    class ConsoleColor:    
-        OKBLUE = "\033[34m"
-        OKCYAN = "\033[36m"
-        OKGREEN = "\033[32m"        
-        MAGENTA = "\033[35m"
-        WARNING = "\033[33m"
-        FAIL = "\033[31m"
-        ENDC = "\033[0m"
-        BOLD = "\033[1m"  
-        
-    # Inverter URL
-    #curl -s -k -X GET -H "Content-Type: application/json" -H "authorization: Bearer $ServerAPIBearerToken" https://api.sunsynk.net/api/v1/inverter/grid/$inverter_serial/realtime?sn=$inverter_serial -o "griddata.json"
-    inverter_url = f"https://api.sunsynk.net/api/v1/inverter/grid/{Serial}/realtime?sn={Serial}"
+def GetGridData(Token,Serial):    
+    global api_server   
+    inverter_url = f"https://{api_server}/api/v1/inverter/grid/{Serial}/realtime?sn={Serial}"
     # Headers (Fixed Bearer token format)
     headers = {
         "Content-Type": "application/json",
@@ -240,31 +224,17 @@ def GetGridData(Token,Serial):
             print("Grid data fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Service Provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Service Provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)                
+        print(ConsoleColor.FAIL + "Error: Failed to parse Service Provider API response." + ConsoleColor.ENDC)                
 
-def GetBatteryData(Token,Serial):
-    import json
-    import requests
-    
-    class ConsoleColor:    
-        OKBLUE = "\033[34m"
-        OKCYAN = "\033[36m"
-        OKGREEN = "\033[32m"        
-        MAGENTA = "\033[35m"
-        WARNING = "\033[33m"
-        FAIL = "\033[31m"
-        ENDC = "\033[0m"
-        BOLD = "\033[1m"  
-        
-    # Inverter URL
-    #curl -s -k -X GET -H "Content-Type: application/json" -H "authorization: Bearer $ServerAPIBearerToken" "https://api.sunsynk.net/api/v1/inverter/battery/$inverter_serial/realtime?sn=$inverter_serial&lan=en" -o "batterydata.json"
-    inverter_url = f"https://api.sunsynk.net/api/v1/inverter/battery/{Serial}/realtime?sn={Serial}&lan=en"
+def GetBatteryData(Token,Serial):  
+    global api_server  
+    inverter_url = f"https://{api_server}/api/v1/inverter/battery/{Serial}/realtime?sn={Serial}&lan=en"
     # Headers (Fixed Bearer token format)
     headers = {
         "Content-Type": "application/json",
@@ -400,31 +370,17 @@ def GetBatteryData(Token,Serial):
             print("Battery data fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Service Provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Service Provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)         
+        print(ConsoleColor.FAIL + "Error: Failed to parse Service Provider API response." + ConsoleColor.ENDC)         
         
-def GetLoadData(Token,Serial):
-    import json
-    import requests
-    
-    class ConsoleColor:    
-        OKBLUE = "\033[34m"
-        OKCYAN = "\033[36m"
-        OKGREEN = "\033[32m"        
-        MAGENTA = "\033[35m"
-        WARNING = "\033[33m"
-        FAIL = "\033[31m"
-        ENDC = "\033[0m"
-        BOLD = "\033[1m" 
-        
-    # Inverter URL
-    #curl -s -k -X GET -H "Content-Type: application/json" -H "authorization: Bearer $ServerAPIBearerToken" https://api.sunsynk.net/api/v1/inverter/load/$inverter_serial/realtime?sn=$inverter_serial -o "loaddata.json"
-    inverter_url = f"https://api.sunsynk.net/api/v1/inverter/load/{Serial}/realtime?sn={Serial}"
+def GetLoadData(Token,Serial): 
+    global api_server    
+    inverter_url = f"https://{api_server}/api/v1/inverter/load/{Serial}/realtime?sn={Serial}"
     # Headers (Fixed Bearer token format)
     headers = {
         "Content-Type": "application/json",
@@ -479,31 +435,17 @@ def GetLoadData(Token,Serial):
             print("Load data fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Service Provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Service Provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)          
+        print(ConsoleColor.FAIL + "Error: Failed to parse Service Provider API response." + ConsoleColor.ENDC)          
         
 def GetOutputData(Token,Serial):
-    import json
-    import requests
-    
-    class ConsoleColor:    
-        OKBLUE = "\033[34m"
-        OKCYAN = "\033[36m"
-        OKGREEN = "\033[32m"        
-        MAGENTA = "\033[35m"
-        WARNING = "\033[33m"
-        FAIL = "\033[31m"
-        ENDC = "\033[0m"
-        BOLD = "\033[1m" 
-        
-    # Inverter URL
-    #curl -s -k -X GET -H "Content-Type: application/json" -H "authorization: Bearer $ServerAPIBearerToken" https://api.sunsynk.net/api/v1/inverter/$inverter_serial/realtime/output -o "outputdata.json"
-    inverter_url = f"https://api.sunsynk.net/api/v1/inverter/{Serial}/realtime/output"
+    global api_server   
+    inverter_url = f"https://{api_server}/api/v1/inverter/{Serial}/realtime/output"
     # Headers (Fixed Bearer token format)
     headers = {
         "Content-Type": "application/json",
@@ -545,34 +487,19 @@ def GetOutputData(Token,Serial):
             print("Output data fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Service Provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Service Provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)         
+        print(ConsoleColor.FAIL + "Error: Failed to parse Service Provider API response." + ConsoleColor.ENDC)         
 
-def GetDCACTemp(Token,Serial):
-    import json
-    import requests
-    from datetime import datetime
-    
-    class ConsoleColor:    
-        OKBLUE = "\033[34m"
-        OKCYAN = "\033[36m"
-        OKGREEN = "\033[32m"        
-        MAGENTA = "\033[35m"
-        WARNING = "\033[33m"
-        FAIL = "\033[31m"
-        ENDC = "\033[0m"
-        BOLD = "\033[1m" 
-        
-    # Inverter URL
-    #curl -s -k -X GET -H "Content-Type: application/json" -H "authorization: Bearer $ServerAPIBearerToken" "https://api.sunsynk.net/api/v1/inverter/$inverter_serial/output/day?lan=en&date=$VarCurrentDate&column=dc_temp,igbt_temp" -o "dcactemp.json"
+def GetDCACTemp(Token,Serial):    
+    global api_server       
     VarCurrentDate = datetime.today().strftime('%Y-%m-%d')
     #print(VarCurrentDate)
-    inverter_url = f"https://api.sunsynk.net/api/v1/inverter/{Serial}/output/day?lan=en&date={VarCurrentDate}&column=dc_temp,igbt_temp"
+    inverter_url = f"https://{api_server}/api/v1/inverter/{Serial}/output/day?lan=en&date={VarCurrentDate}&column=dc_temp,igbt_temp"
     # Headers (Fixed Bearer token format)
     headers = {
         "Content-Type": "application/json",
@@ -605,12 +532,12 @@ def GetDCACTemp(Token,Serial):
             print("Inverter data fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Service Provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Service Provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)         
+        print(ConsoleColor.FAIL + "Error: Failed to parse Service Provider API response." + ConsoleColor.ENDC)         
 
 
