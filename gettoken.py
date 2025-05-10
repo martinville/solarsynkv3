@@ -16,7 +16,7 @@ def gettoken():
     with open('/data/options.json') as options_file:
        json_settings = json.load(options_file)
     # API URL
-    url = 'https://api.sunsynk.net/oauth/token'
+    url = f'https://{json_settings['API_Server']}/oauth/token'
     # Prepare request payload
     payload = {
         "areaCode": "sunsynk",
