@@ -21,7 +21,7 @@ options:
   HA_LongLiveToken: ""
   Refresh_rate: 300
   Enable_HTTPS: false
-  api_server: "api.sunsynk.net"
+  API_Server: "api.sunsynk.net"  
   
 schema:
   sunsynk_user: str
@@ -32,4 +32,4 @@ schema:
   HA_LongLiveToken: password
   Refresh_rate: int
   Enable_HTTPS: bool
-  api_server: list(api.sunsynk.net|pv.inteless.com)
+  API_Server: list(api.sunsynk.net|pv.inteless.com)
