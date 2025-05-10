@@ -25,4 +25,4 @@ configuration:
     description: If your Homeassistant server was setup to use HTTPS then you need to trun this setting on.
   API_Server:
     name: API Endpoint
-    description: Select the appropriate API server: use api.sunsynk.net for Sunsynk devices or pv.inteless.com for generic Elinter-based inverters.
+    description: testr
