@@ -1,4 +1,4 @@
-### 2025/03/22
+### 2025/05/10
 Version "3.0.19" - Added option to select pv.inteless.com as an alternative API endpoint for generic E-Linterbased inverters. (Experimental)
 
 ### 2025/03/22
