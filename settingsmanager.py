@@ -84,7 +84,7 @@ def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
 
         headers = {"Content-Type": "application/json","Authorization": f"Bearer {HaToken}"}  
         url = f"{httpurl_proto}://" + str(json_settings['Home_Assistant_IP']) + ":" + str(json_settings['Home_Assistant_PORT']) + "/api/states/input_text.solarsynkv3_" + Serial + '_settings'
-        
+        print("Get automation settings: " + ConsoleColor.WARNING + url + ConsoleColor.ENDC)
         #print(str(url))
         #print(str(headers))
       
