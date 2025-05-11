@@ -1,6 +1,6 @@
 import postapi
 def DownloadSunSynkSettings(Token,Serial):
-    #Set sunsynk settings and save to file settings_serial.json
+    #Get sunsynk settings and save to file settings_serial.json
     import json
     import requests
     from datetime import datetime
