@@ -59,6 +59,7 @@ def fetch_data(api_function, BearerToken, serialitem, description):
 print("------------------------------------------------------------------------------")
 print("-- " + ConsoleColor.MAGENTA + f"Running Script SolarSynkV3" + ConsoleColor.ENDC)
 print("-- " + "Using API Endpoint: " + ConsoleColor.MAGENTA + json_settings['API_Server'] + ConsoleColor.ENDC )
+print("-- https://github.com/martinville/solarsynkv3")
 print("------------------------------------------------------------------------------")   
 
 # Get Bearer Token
