@@ -51,7 +51,7 @@ After starting the add-on, verify everything is working by clicking the "Log" ta
 # Sending Settings back to inverter
 
 ### Intro
-The Solarsynk Home Assistant integration enables you to send settings to your inverter, with support currently limited to updating battery settings.
+The Solarsynk Home Assistant integration enables you to send settings to your inverter, with support currently limited to updating battery and system mode settings.
 
 ### How it works
 After each loop, when the integration retrieves the various values, it will check the entity named [solarsynkv3_YOUR_INVERTER_SERIAL_NUMBER_settings]. If valid settings are found, they will be posted back to the SunSynk Portal.
@@ -60,7 +60,8 @@ Once the settings are posted, the settings entity will be cleared to prevent the
 
 When running the integration for the first time, you will see an error message indicating that the entity does not exist, along with instructions on how to create it. However, the integration will also attempt to automatically create the entity. If the automatic creation fails, you can follow the instructions in the log to manually create it.
 
-#### Below is a list of all settings that can be updated
+### List of updatable settings
+#### Battery settings 
 ```json
 {
     "absorptionVolt": "57.6",
@@ -105,15 +106,79 @@ When running the integration for the first time, you will see an error message i
     "tempco": "0"
 }
 ```
-
+#### System mode settings 
+```json
+{
+  "sn": "2302246241",
+  "safetyType": "0",
+  "battMode": "-1",
+  "solarSell": "0",
+  "pvMaxLimit": "5000",
+  "energyMode": "1",
+  "peakAndVallery": "1",
+  "sysWorkMode": "1",
+  "sellTime1": "03:00",
+  "sellTime2": "08:30",
+  "sellTime3": "09:00",
+  "sellTime4": "09:00",
+  "sellTime5": "11:00",
+  "sellTime6": "12:00",
+  "sellTime1Pac": "5000",
+  "sellTime2Pac": "5000",
+  "sellTime3Pac": "5000",
+  "sellTime4Pac": "5000",
+  "sellTime5Pac": "5000",
+  "sellTime6Pac": "5000",
+  "cap1": "35",
+  "cap2": "100",
+  "cap3": "100",
+  "cap4": "100",
+  "cap5": "100",
+  "cap6": "100",
+  "sellTime1Volt": "49",
+  "sellTime2Volt": "49",
+  "sellTime3Volt": "49",
+  "sellTime4Volt": "49",
+  "sellTime5Volt": "49",
+  "sellTime6Volt": "49",
+  "zeroExportPower": "20",
+  "solarMaxSellPower": "6500",
+  "mondayOn": true,
+  "tuesdayOn": true,
+  "wednesdayOn": true,
+  "thursdayOn": true,
+  "fridayOn": true,
+  "saturdayOn": true,
+  "sundayOn": true,
+  "time1on": true,
+  "time2on": "false",
+  "time3on": "false",
+  "time4on": true,
+  "time5on": true,
+  "time6on": true,
+  "genTime1on": "false",
+  "genTime2on": "false",
+  "genTime3on": "false",
+  "genTime4on": "false",
+  "genTime5on": "false",
+  "genTime6on": "false"
+}
+```
 ## Setting the settings entity value with a properly formatted string
 Each setting must be separated by a semicolon (;).
 
-### Example of a Single Setting:
+### Battery settings example of a Single Setting:
 `"batteryCap": "100"`
-
-### Example of Updating Multiple Settings Simultaneously:
+### Example of Updating Multiple Battery Settings Simultaneously:
 `"batteryCap": "100";"batteryLowCap": "35"`
+
+### system mode settings example of a Single Setting:
+`"time2on":"true"`
+### Example of Updating Multiple system Mode Settings Simultaneously:
+###### Below will turn on the timer switch (peakAndVallery) abd ad the same time enable Grid Charge Timer 2 and Timer 3
+`"peakAndVallery": "1";"time2on":"true";"time3on":"true"`
+ 
+
 
 
 
