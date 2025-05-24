@@ -167,7 +167,7 @@ When running the integration for the first time, you will see an error message i
 ```
 ## Setting the settings entity value with a properly formatted string
 Each setting must be separated by a semicolon (;).
-##### Note that you cannot mix battery settings with system mode settings. I.E `"peakAndVallery": "1";"time2on":"true";"time3on":"true"` will not work.
+Note that you cannot mix battery settings with system mode settings. I.E `"batteryCap": "100";"time2on":"true"` will not work.
 
 ### Battery settings example of a single setting:
 `"batteryCap": "100"`
