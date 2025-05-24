@@ -169,12 +169,12 @@ Each setting must be separated by a semicolon (;).
 
 ### Battery settings example of a single Setting:
 `"batteryCap": "100"`
-### Example of Updating Multiple Battery settings simultaneously:
+### Example to update multiple battery settings simultaneously:
 `"batteryCap": "100";"batteryLowCap": "35"`
 
-### system mode settings example of a Single Setting:
+### system mode settings example of a single setting:
 `"time2on":"true"`
-### Example of Updating Multiple system mode settings simultaneously:
+### Example to update multiple system mode settings simultaneously:
 ###### Below will turn on the timer switch (peakAndVallery) abd ad the same time enable Grid Charge Timer 2 and Timer 3
 `"peakAndVallery": "1";"time2on":"true";"time3on":"true"`
  
