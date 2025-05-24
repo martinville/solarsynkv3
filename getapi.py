@@ -421,13 +421,13 @@ def GetLoadData(Token,Serial):
             
             postapi.PostHAEntity(Serial,"kWh","energy","Load Total Used","load_total_used",str(parsed_inverter_json['data']['totalUsed']))
             postapi.PostHAEntity(Serial,"kWh","energy","Load Daily Used","load_daily_used",str(parsed_inverter_json['data']['dailyUsed']))
-            postapi.PostHAEntity(Serial,"kWh","energy","Load Total Power","load_total_power",str(parsed_inverter_json['data']['totalPower']))
+            postapi.PostHAEntity(Serial,"W","power","Load Total Power","load_total_power",str(parsed_inverter_json['data']['totalPower']))
             postapi.PostHAEntity(Serial,"","","Load Smart Load Status","load_smar_load_status",str(parsed_inverter_json['data']['smartLoadStatus']))
             postapi.PostHAEntity(Serial,"Hz","frequency","Load Frequency","load_frequency",str(parsed_inverter_json['data']['loadFac']))
             postapi.PostHAEntity(Serial,"W","power","Load Power L1","load_power_l1",str(parsed_inverter_json['data']['upsPowerL1']))
             postapi.PostHAEntity(Serial,"W","power","Load Power L2","load_power_l2",str(parsed_inverter_json['data']['upsPowerL2']))
             postapi.PostHAEntity(Serial,"W","power","Load Power L3","load_power_l3",str(parsed_inverter_json['data']['upsPowerL3']))
-            postapi.PostHAEntity(Serial,"W","power","Battery time","load_total_power",str(parsed_inverter_json['data']['upsPowerTotal']))
+            postapi.PostHAEntity(Serial,"W","power","Load UPS Total Power","load_ups_total_power",str(parsed_inverter_json['data']['upsPowerTotal']))
 
             print(ConsoleColor.OKGREEN + "Load fetch complete" + ConsoleColor.ENDC) 
             
