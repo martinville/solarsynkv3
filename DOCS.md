@@ -53,6 +53,7 @@ After starting the add-on, verify everything is working by clicking the "Log" ta
 ### Intro
 The Solarsynk Home Assistant integration enables you to send settings to your inverter, with support currently limited to updating battery and system mode settings.
 
+
 ### How it works
 After each loop, when the integration retrieves the various values, it will check the entity named [solarsynkv3_YOUR_INVERTER_SERIAL_NUMBER_settings]. If valid settings are found, they will be posted back to the SunSynk Portal.
 
@@ -166,6 +167,7 @@ When running the integration for the first time, you will see an error message i
 ```
 ## Setting the settings entity value with a properly formatted string
 Each setting must be separated by a semicolon (;).
+##### Note that you cannot mix battery settings with system mode settings. I.E `"peakAndVallery": "1";"time2on":"true";"time3on":"true"` will not work.
 
 ### Battery settings example of a single setting:
 `"batteryCap": "100"`
