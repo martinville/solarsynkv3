@@ -175,7 +175,7 @@ Each setting must be separated by a semicolon (;).
 ### System mode settings example of a single setting:
 `"time2on":"true"`
 ### Example to update multiple system mode settings simultaneously:
-###### Below will turn on the timer switch (peakAndVallery) abd ad the same time enable Grid Charge Timer 2 and Timer 3
+###### Below will turn on the timer switch (peakAndVallery) and at the same time enable grid charge Timer 2 and Timer 3
 `"peakAndVallery": "1";"time2on":"true";"time3on":"true"`
  
 
