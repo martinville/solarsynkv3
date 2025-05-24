@@ -1,21 +1,48 @@
 import postapi
-def DownloadSunSynkSettings(Token,Serial):
-    #Get sunsynk settings and save to file settings_serial.json
-    import json
-    import requests
-    from datetime import datetime
+
+#################################################################################################################################################
+## NOTES on the workflow
+## Steps
+## 1.  Dump all existing inverter settings from server to file --> svr_settings.json
+## 2.  Start the process to get settings from HA set by user
+## 3a. Build Battery settings template and merge existing server settings into the template *This is just prep, settings from user not yet populated" 
+## 3b. Build System mode settings template and merge existing server settings into the template *This is just prep, settings from user not yet populated" 
+## 4.  Fetch user settings from HA Entity --> /api/states/input_text.solarsynkv3 and iterate through each user provided setting.
+## 5.  Check each setting provided by user and determine in which category the setting is from and pass both the setting and value I.E Battery, System mode
+## 6.  Open the previously merged setting file and then populate the setting if found in the settings category.
+#################################################################################################################################################
+
+#Get server provider settings and save to file settings_serial.json
+import json
+import requests
+from datetime import datetime
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) 
+
+# Load settings from JSON file
+try:
+    with open('/data/options.json') as options_file:
+        json_settings = json.load(options_file)
+        api_server = json_settings['API_Server']
+except Exception as e:
+    logging.error(f"Failed to load settings: {e}")
+    print(ConsoleColor.FAIL + "Error loading settings.json. Ensure the file exists and is valid JSON." + ConsoleColor.ENDC)
+    exit()
     
-    class ConsoleColor:    
-        OKBLUE = "\033[34m"
-        OKCYAN = "\033[36m"
-        OKGREEN = "\033[32m"        
-        MAGENTA = "\033[35m"
-        WARNING = "\033[33m"
-        FAIL = "\033[31m"
-        ENDC = "\033[0m"
-        BOLD = "\033[1m" 
+class ConsoleColor:    
+    OKBLUE = "\033[34m"
+    OKCYAN = "\033[36m"
+    OKGREEN = "\033[32m"        
+    MAGENTA = "\033[35m"
+    WARNING = "\033[33m"
+    FAIL = "\033[31m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m" 
         
-    inverter_url = f"https://api.sunsynk.net/api/v1/common/setting/{Serial}/read"
+        
+def DownloadProviderSettings(Token,Serial):
+    global api_server
+    inverter_url = f"https://{api_server}/api/v1/common/setting/{Serial}/read"
     # Headers (Fixed Bearer token format)
 
     headers = {
@@ -29,7 +56,7 @@ def DownloadSunSynkSettings(Token,Serial):
         response.raise_for_status()
 
         parsed_inverter_json = response.json()
-        
+        #print(parsed_inverter_json)
 
         if parsed_inverter_json.get('msg') == "Success":           
             print(ConsoleColor.BOLD + "Settings fetch response: " + ConsoleColor.OKGREEN + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
@@ -38,40 +65,22 @@ def DownloadSunSynkSettings(Token,Serial):
                 json.dump(parsed_inverter_json, file, indent=4)
                 
             
-            print(ConsoleColor.OKGREEN + "Settings download from synsynk complete" + ConsoleColor.ENDC)
+            print(ConsoleColor.OKGREEN + "Settings download from provider complete" + ConsoleColor.ENDC)
         
         else:
             print("Settings fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
 
     except requests.exceptions.Timeout:
-        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to provider API." + ConsoleColor.ENDC)
 
     except requests.exceptions.RequestException as e:
-        print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to provider API. {e}" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC) 
+        print(ConsoleColor.FAIL + "Error: Failed to parse provider API response." + ConsoleColor.ENDC) 
         
-
 def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
-    import json
-    import requests
-    import urllib3
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) 
-    # solarsynkv3_ 2302246241_settings
-    #CheckEntity=$(curl -s -k -X GET -H "Authorization: Bearer $HA_LongLiveToken" -H "Content-Type: application/json"  $HTTP_Connect_Type://$Home_Assistant_IP:$Home_Assistant_PORT/api/states/input_text.solarsynk_"$inverter_serial"_inverter_settings | jq -r '.message')
-
-    class ConsoleColor:    
-        OKBLUE = "\033[34m"
-        OKCYAN = "\033[36m"
-        OKGREEN = "\033[32m"        
-        MAGENTA = "\033[35m"
-        WARNING = "\033[33m"
-        FAIL = "\033[31m"
-        ENDC = "\033[0m"
-        BOLD = "\033[1m" 
-
-    
+    global api_server
     
     with open('/data/options.json') as options_file:
         json_settings = json.load(options_file)
@@ -88,11 +97,12 @@ def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
         #print(str(url))
         #print(str(headers))
       
-    #Build Local Battery Settings 
+    #Build Local Settings Templates (Later we will inject settings from the HA entity)
     print(ConsoleColor.WARNING +  BuildLocalBatterySettings() + ConsoleColor.ENDC)
+    print(ConsoleColor.WARNING +  BuildLocalSystemModeSettings() + ConsoleColor.ENDC)
     
     try:
-        # Corrected to use GET request
+        # GET HA Settings from entity
         response = requests.get(url, headers=headers, timeout=10, verify=False)
         response.raise_for_status()
         parsed_inverter_json = response.json()
@@ -102,22 +112,27 @@ def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
         
         EntSettings = str(parsed_inverter_json['state']).split(";")        
         #print("The following settings were found in: " + ConsoleColor.OKCYAN  +  "solarsynkv3_" + Serial + "_settings" + ConsoleColor.ENDC)                
-        LoopCount=0        
+        LoopCount=0 
+        LastSettingsType=""
         for EntSetting in EntSettings: 
+            #LoopCount=LoopCount+1
+            #print(LoopCount)
             FormatToJSON = "{" + str(EntSetting) + "}"
             if FormatToJSON != "{}":
                 FormatToJSON = json.loads(FormatToJSON)
     
                 JSON_Key = list(FormatToJSON.keys())[0]
                 JSON_Value = FormatToJSON[JSON_Key]
-                #print(JSON_Key  + "-->" + JSON_Value)
+
                 #Determine setting type and edit JSON after downloading an populating with existing settings
-                if DetermineSettingCategory(JSON_Key,JSON_Value) == "Valid Battery Setting":
-                    PostSettingToSunSynk(SunSynkToken,Serial,"Battery Settings") 
+                LastSettingsType = DetermineSettingCategory(JSON_Key,JSON_Value)
             else:
                 print("No settings to process")
             
-                
+        if LastSettingsType ==  "Valid Battery Setting":
+            PostSettingToSunSynk(SunSynkToken,Serial,"Battery Settings")
+        if LastSettingsType ==  "Valid SystemMode Setting":
+            PostSettingToSunSynk(SunSynkToken,Serial,"SystemMode Settings")            
         
         
     except requests.exceptions.Timeout:
@@ -128,13 +143,14 @@ def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
         print(f"You probably did not create the settings entity. Manually create it for inverter with serial " + ConsoleColor.OKCYAN + Serial + ConsoleColor.ENDC + " In the HA GUI in menu [Settings] -> [Devices & Services] -> [Helpers] tab -> [+ CREATE HELPER]. Choose [Text] and name it: " + ConsoleColor.OKCYAN  +  "solarsynkv3_" + Serial + "_settings" + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
-        print(ConsoleColor.MAGENTA + "Notice: Invalid or no settings found to post back to sunsynk. This is not a critical error, it just means that the settings you provided in the settings entity (/api/states/input_text.solarsynkv3_" + Serial + "_settings) is invalid or blank. If this is intentional just ignore." + ConsoleColor.ENDC)        
-        
+        print(ConsoleColor.MAGENTA + "Notice: Invalid or no settings found to post back to sunsynk. This is not a critical error, it just means that the settings you provided in the settings entity (/api/states/input_text.solarsynkv3_" + Serial + "_settings) is invalid or blank. If this is intentional just ignore." + ConsoleColor.ENDC)                
         
 def DetermineSettingCategory(JSON_Search_Key,JSON_Search_Key_val):    
-    import json
-    #Determine the type of setting that is intended to be updated
+    global api_server
+    #Determine the type of setting that is intended to be updated and inject the value into the merged json file previously created.
     #Example Setting: "batteryCap":"97"
+    
+    #Battery Settings
     if JSON_Search_Key in ("absorptionVolt","battMode","batteryCap","batteryEfficiency","batteryEmptyV","batteryImpedance","batteryLowCap","batteryLowVolt","batteryMaxCurrentCharge","batteryMaxCurrentDischarge","batteryOn","batteryRestartCap","batteryRestartVolt","batteryShutdownCap","batteryShutdownVolt","bmsErrStop","disableFloatCharge","equChargeCycle","equChargeTime","equVoltCharge","floatVolt","genChargeOn","genSignal","generatorBatteryCurrent","generatorForcedStart","generatorStartCap","generatorStartVolt","gridSignal","lithiumMode","lowNoiseMode","lowPowerMode","safetyType","sdBatteryCurrent","sdChargeOn","sdStartCap","sdStartVol","sdStartVolt","signalIslandModeEnable","sn","tempco"):
         
         print("Battery Setting update request detected for: " + JSON_Search_Key + "-->" + JSON_Search_Key_val)
@@ -147,35 +163,44 @@ def DetermineSettingCategory(JSON_Search_Key,JSON_Search_Key_val):
 
         # Save the modified data back to the JSON file
         with open('merged_battery_settings.json', 'w') as file:
-            json.dump(data, file, indent=2)  # 'indent' for pretty-printing        
+            json.dump(data, file, indent=2)  # 'indent' for pretty-printing    
+            
+        #Fix file by replacing "true" with true
+        ReplaceTRUE('merged_systemmode_settings.json')            
         return("Valid Battery Setting")
-    #DEBUG Read contents of newlybuilt battery_settings file
-    #with open("merged_battery_settings.json", "r") as file:
-    #    content = file.read()
-    #    print(content)
-    #print("Processed ")
-
-
-
-
-def PostSettingToSunSynk(Token,Serial,SettingsType):
-    import json
-    import requests
+        exit()
     
-    class ConsoleColor:    
-        OKBLUE = "\033[34m"
-        OKCYAN = "\033[36m"
-        OKGREEN = "\033[32m"        
-        MAGENTA = "\033[35m"
-        WARNING = "\033[33m"
-        FAIL = "\033[31m"
-        ENDC = "\033[0m"
-        BOLD = "\033[1m"
+    #System Mode Settings
+    if JSON_Search_Key in ("sn","safetyType","battMode","solarSell","pvMaxLimit","energyMode","peakAndVallery","sysWorkMode","sellTime1","sellTime2","sellTime3","sellTime4","sellTime5","sellTime6","sellTime1Pac","sellTime2Pac","sellTime3Pac","sellTime4Pac","sellTime5Pac","sellTime6Pac","cap1","cap2","cap3","cap4","cap5","cap6","sellTime1Volt","sellTime2Volt","sellTime3Volt","sellTime4Volt","sellTime5Volt","sellTime6Volt","zeroExportPower","solarMaxSellPower","mondayOn","tuesdayOn","wednesdayOn","thursdayOn","fridayOn","saturdayOn","sundayOn","time1on","time2on","time3on","time4on","time5on","time6on","genTime1on","genTime2on","genTime3on","genTime4on","genTime5on","genTime6on"):
         
+        print("System Mode Setting update request detected for: " + JSON_Search_Key + "-->" + JSON_Search_Key_val)
+        # Load the JSON data from a file
+        with open('merged_systemmode_settings.json', 'r') as file:
+            data = json.load(file)
     
-    if SettingsType == "Battery Settings":
-        #curl -s -k -X POST -H "Content-Type: application/json" -H "authorization: Bearer $ServerAPIBearerToken" https://api.sunsynk.net/api/v1/common/setting/$inverter_serial/set
-        inverter_url = f"https://api.sunsynk.net/api/v1/common/setting/{Serial}/set"
+        
+        #Update Object           
+        data[JSON_Search_Key] = JSON_Search_Key_val
+       
+        # Save the modified data back to the JSON file
+        with open('merged_systemmode_settings.json', 'w') as file:
+            json.dump(data, file, indent=2)  # 'indent' for pretty-printing        
+        
+        #Fix file by replacing "true" with true
+        ReplaceTRUE('merged_systemmode_settings.json')
+        
+        #DEBUG Read contents of newlybuilt systemmode_settings file
+        #with open('merged_systemmode_settings.json', "r") as file:
+        #    content = file.read()
+        #    print(content)           
+        return("Valid SystemMode Setting")      
+        exit()        
+    
+def PostSettingToSunSynk(Token,Serial,SettingsType):
+    print("Posting Settings to Inverter")
+    global api_server    
+    if SettingsType == "Battery Settings":        
+        inverter_url = f"https://{api_server}/api/v1/common/setting/{Serial}/set"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {Token}"
@@ -202,31 +227,40 @@ def PostSettingToSunSynk(Token,Serial,SettingsType):
             print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
 
         except json.JSONDecodeError:
-            print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)  
+            print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC) 
 
+    if SettingsType == "SystemMode Settings":        
+        inverter_url = f"https://{api_server}/api/v1/common/setting/{Serial}/set"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {Token}"
+        }
+        try:
+            with open("merged_systemmode_settings.json", "r") as file:
+                payload = json.load(file)  # Load JSON content as a Python dictionary
 
+            # Send POST request
+            response = requests.post(inverter_url, json=payload, headers=headers, timeout=10)
+            parsed_json_response = response.json()
+            if parsed_json_response.get('msg') == "Success":                    
+                # Print response
+                #print(ConsoleColor.OKGREEN + "Server Rsponse:" + response.text +  ConsoleColor.ENDC)
+                print(SettingsType + " updated with SunkSynk server response: " + ConsoleColor.OKGREEN + parsed_json_response['msg'] + ConsoleColor.ENDC)
+            else:
+                print("Update failed with SunkSynk response: " + ConsoleColor.FAIL +  parsed_json_response['msg'] + ConsoleColor.ENDC)
+            
 
+        except requests.exceptions.Timeout:
+            print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Sunsynk API." + ConsoleColor.ENDC)
 
+        except requests.exceptions.RequestException as e:
+            print(ConsoleColor.FAIL + f"Error: Failed to connect to Sunsynk API. {e}" + ConsoleColor.ENDC)
 
-
+        except json.JSONDecodeError:
+            print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)             
 
 def ResetSettingsEntity(Serial):
-    #curl -s -k -X POST -H "Authorization: Bearer $HA_LongLiveToken" -H "Content-Type: application/json" -d '{"attributes": {"unit_of_measurement": "", "friendly_name": "solarsynk_inverter_settings"}, "state": ""}' $HTTP_Connect_Type://$Home_Assistant_IP:$Home_Assistant_PORT/api/states/input_text.solarsynk_"$inverter_serial"_inverter_settings > /dev/null
-    import json
-    import requests
-    import urllib3
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)    
-    
-    class ConsoleColor:    
-        OKBLUE = "\033[34m"
-        OKCYAN = "\033[36m"
-        OKGREEN = "\033[32m"        
-        MAGENTA = "\033[35m"
-        WARNING = "\033[33m"
-        FAIL = "\033[31m"
-        ENDC = "\033[0m"
-        BOLD = "\033[1m" 
-    
+    global api_server
     with open('/data/options.json') as options_file:
         json_settings = json.load(options_file)
         HAToken = json_settings['HA_LongLiveToken']
@@ -261,11 +295,9 @@ def ResetSettingsEntity(Serial):
     except json.JSONDecodeError:
             print(ConsoleColor.FAIL + "Error: Failed to parse Home Assistant API response." + ConsoleColor.ENDC)     
 
-
-
 def BuildLocalBatterySettings():
-    import json
-    #Build Local copy of settings (But formated in a way that it's ready for posting to Sunsynk)
+    global api_server
+    #Build Local copy of settings template
     BuildBatterySettingJSON="{"
     ArrBattery_settings = ["absorptionVolt","battMode","batteryCap","batteryEfficiency","batteryEmptyV","batteryImpedance","batteryLowCap","batteryLowVolt","batteryMaxCurrentCharge","batteryMaxCurrentDischarge","batteryOn","batteryRestartCap","batteryRestartVolt","batteryShutdownCap","batteryShutdownVolt","bmsErrStop","disableFloatCharge","equChargeCycle","equChargeTime","equVoltCharge","floatVolt","genChargeOn","genSignal","generatorBatteryCurrent","generatorForcedStart","generatorStartCap","generatorStartVolt","gridSignal","lithiumMode","lowNoiseMode","lowPowerMode","safetyType","sdBatteryCurrent","sdChargeOn","sdStartCap","sdStartVol","sdStartVolt","signalIslandModeEnable","sn","tempco"]
     for Item_Battery_setting in ArrBattery_settings:
@@ -274,7 +306,7 @@ def BuildLocalBatterySettings():
                 
     BuildBatterySettingJSON = BuildBatterySettingJSON[:-1]
     BuildBatterySettingJSON = BuildBatterySettingJSON + "}"
-        #print(BuildBatterySettingJSON)
+    #print(BuildBatterySettingJSON)
     # Open file battery_settings. in write mode ("w" overwrites existing content)
     with open("battery_settings.json", "w") as file:
         file.write(BuildBatterySettingJSON)           
@@ -311,9 +343,89 @@ def BuildLocalBatterySettings():
     with open(output_file, 'w') as out:
         json.dump(target_data, out, indent=4)
     #DEBUG Read contents of newlybuilt battery_settings file
-    #with open("merged_battery_settings.json", "r") as file:
+    #with open(output_file, "r") as file:
     #    content = file.read()
     #    print(content)         
     
     #return target_data          
     return("File: merged_battery_settings.json built successfully." )    
+
+def BuildLocalSystemModeSettings():
+    global api_server
+    #Build Local copy of settings template
+    BuildSystemModeSettingJSON="{"
+    ArrsySystemMode_settings = ["sn","safetyType","battMode","solarSell","pvMaxLimit","energyMode","peakAndVallery","sysWorkMode","sellTime1","sellTime2","sellTime3","sellTime4","sellTime5","sellTime6","sellTime1Pac","sellTime2Pac","sellTime3Pac","sellTime4Pac","sellTime5Pac","sellTime6Pac","cap1","cap2","cap3","cap4","cap5","cap6","sellTime1Volt","sellTime2Volt","sellTime3Volt","sellTime4Volt","sellTime5Volt","sellTime6Volt","zeroExportPower","solarMaxSellPower","mondayOn","tuesdayOn","wednesdayOn","thursdayOn","fridayOn","saturdayOn","sundayOn","time1on","time2on","time3on","time4on","time5on","time6on","genTime1on","genTime2on","genTime3on","genTime4on","genTime5on","genTime6on"]
+    for Item_SystemMode_setting in ArrsySystemMode_settings:
+        #print(Item_SystemMode_setting)
+        BuildSystemModeSettingJSON=BuildSystemModeSettingJSON + '"' + Item_SystemMode_setting + '" : "",'
+                
+    BuildSystemModeSettingJSON = BuildSystemModeSettingJSON[:-1]
+    BuildSystemModeSettingJSON = BuildSystemModeSettingJSON + "}"
+    
+        #print(BuildSystemModeSettingJSON)
+    # Open file systemmode_settings. in write mode ("w" overwrites existing content)
+    with open("systemmode_settings.json", "w") as file:
+        file.write(BuildSystemModeSettingJSON)           
+
+    #DEBUG Read contents of newlybuilt systemmode_settings file
+    #with open("systemmode_settings.json", "r") as file:
+    #    content = file.read()
+    #    print(content)  
+    
+    ####################################################################################################
+    #### Merge server settings with local settings file.    
+    ####################################################################################################
+    source_file = "svr_settings.json"
+    target_file = "systemmode_settings.json"
+    output_file = "merged_systemmode_settings.json"    
+    
+    # Load the source JSON file    
+    with open(source_file, 'r') as src:
+        source_data = json.load(src)
+    
+    # Load the target JSON file
+    with open(target_file, 'r') as tgt:
+        target_data = json.load(tgt)
+    
+    # Ensure we're working with the "data" section of the source
+    source_settings = source_data.get("data", {})
+    
+    # Iterate over the target keys and update them with source values if available
+    for key in target_data:
+        if key in source_settings:
+            target_data[key] = source_settings[key]
+    
+    # Save the merged data to the output file
+    with open(output_file, 'w') as out:
+        json.dump(target_data, out, indent=4)
+    #DEBUG Read contents of newlybuilt systemmode_settings file
+    #with open(output_file, "r") as file:
+    #    content = file.read()
+    #    print(content)         
+    
+    #return target_data          
+    return("File: merged_systemmode_settings.json built successfully." ) 
+
+
+def ReplaceTRUE(fileName):
+    # Open and read the JSON file
+    with open('merged_systemmode_settings.json', 'r') as file:
+        data = json.load(file)
+
+    # Replace all "true" strings with boolean true
+    data = replace_string_true_with_boolean(data)
+
+    # Write the updated JSON back to the file
+    with open(fileName, 'w') as file:
+        json.dump(data, file, indent=2)
+
+#Replace "true" with true    
+def replace_string_true_with_boolean(obj):
+    if isinstance(obj, dict):
+        return {k: replace_string_true_with_boolean(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [replace_string_true_with_boolean(item) for item in obj]
+    elif obj == "true":
+        return True
+    else:
+        return obj
