@@ -120,7 +120,7 @@ if BearerToken:
             print(ConsoleColor.OKGREEN + "All API calls completed successfully!" + ConsoleColor.ENDC)
 
             # Download and process inverter settings
-            settingsmanager.DownloadSunSynkSettings(BearerToken, str(serialitem))
+            settingsmanager.DownloadProviderSettings(BearerToken, str(serialitem))
             settingsmanager.GetNewSettingsFromHAEntity(BearerToken, str(serialitem))
 
             # Clear old settings to prevent re-sending
