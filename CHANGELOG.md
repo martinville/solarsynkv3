@@ -1,3 +1,9 @@
+### 2025/05/24
+Version "3.0.20" - Corrections and added features
+Corrected Load entitiy changed factor load_total_power from kWh to W
+Corrected UPS Power (Previously named "Battery time") Now named "Load UPS Total Power"
+Added functionality to update system mode settings, refer to documentation on how to use it.
+
 ### 2025/05/10
 Version "3.0.19" - Added option to select pv.inteless.com as an alternative API endpoint for generic E-Linterbased inverters. (Experimental)
 
