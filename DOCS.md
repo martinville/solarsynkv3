@@ -167,7 +167,7 @@ When running the integration for the first time, you will see an error message i
 ## Setting the settings entity value with a properly formatted string
 Each setting must be separated by a semicolon (;).
 
-### Battery settings example of a single Setting:
+### Battery settings example of a single setting:
 `"batteryCap": "100"`
 ### Example to update multiple battery settings simultaneously:
 `"batteryCap": "100";"batteryLowCap": "35"`
