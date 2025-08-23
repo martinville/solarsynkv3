@@ -1,3 +1,6 @@
+### 2025/08/24
+Version "3.0.21" - Added missing battery current.
+
 ### 2025/05/24
 Version "3.0.20" - Corrections and added features
 Corrected Load entitiy changed factor load_total_power from kWh to W
