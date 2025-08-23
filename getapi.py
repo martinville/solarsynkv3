@@ -349,7 +349,7 @@ def GetBatteryData(Token,Serial):
             postapi.PostHAEntity(Serial,"","","Battery Status","battery_status",str(parsed_inverter_json['data']['status']))
             postapi.PostHAEntity(Serial,"%","battery","Battery SOC 1","battery_soc1",str(parsed_inverter_json['data']['batterySoc1']))                        
             
-            print("sending battery current");
+            
             postapi.PostHAEntity(Serial,"A","current","Battery Current","battery_current",str(parsed_inverter_json['data']['current']))
             
             postapi.PostHAEntity(Serial,"V","voltage","Battery Voltage 1","battery_voltage1",str(parsed_inverter_json['data']['batteryVolt1']))
@@ -543,6 +543,7 @@ def GetDCACTemp(Token,Serial):
 
     except json.JSONDecodeError:
         print(ConsoleColor.FAIL + "Error: Failed to parse Service Provider API response." + ConsoleColor.ENDC)         
+
 
 
 
