@@ -1,3 +1,6 @@
+### 2025/09/02
+Version "3.0.22" - Fixed OAuth endpoint and request structure
+
 ### 2025/08/24
 Version "3.0.21" - Added missing battery current.
 
