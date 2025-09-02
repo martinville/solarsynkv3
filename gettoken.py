@@ -1,6 +1,12 @@
 def gettoken():
+    import base64
     import json
     import requests
+    from uuid import uuid4
+    from io import StringIO
+    from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15
+    from cryptography.hazmat.primitives.serialization import load_pem_public_key
+
     BearerToken = ""
 
     class ConsoleColor:    
@@ -15,14 +21,45 @@ def gettoken():
 
     with open('/data/options.json') as options_file:
        json_settings = json.load(options_file)
+
+    # Get key to encode token with
+    response = requests.get(
+        'https://api.sunsynk.net/anonymous/publicKey',
+        params={
+            'source': 'sunsynk',
+            'nonce': uuid4()
+        }
+    )
+
+    # Write public key file
+    public_key_file = StringIO()
+    public_key_file.writelines(
+        [
+            '-----BEGIN PUBLIC KEY-----',
+            response.json()['data'],
+            '-----END PUBLIC KEY-----'
+        ]
+    )
+    public_key_file.seek(0)
+
+    # Load public key
+    public_key = load_pem_public_key(
+        bytes(public_key_file.read(), encoding='utf-8'),
+    )
+
+    encrypted_password = base64.b64encode(public_key.encrypt(
+        json_settings['sunsynk_pass'].encode('utf-8'),
+        padding=PKCS1v15()
+    )).decode('utf-8')
+
     # API URL
-    url = f'https://{json_settings['API_Server']}/oauth/token'
+    url = f'https://{json_settings["API_Server"]}/oauth/token/new'
     # Prepare request payload
     payload = {
         "areaCode": "sunsynk",
         "client_id": "csp-web",
         "grant_type": "password",
-        "password": json_settings['sunsynk_pass'],
+        "password": encrypted_password,
         "source": "sunsynk",
         "username": json_settings['sunsynk_user']
     }
