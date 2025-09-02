@@ -1,8 +1,8 @@
 def gettoken():
+    import time
     import base64
     import json
     import requests
-    from uuid import uuid4
     from io import StringIO
     from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15
     from cryptography.hazmat.primitives.serialization import load_pem_public_key
@@ -27,7 +27,7 @@ def gettoken():
         'https://api.sunsynk.net/anonymous/publicKey',
         params={
             'source': 'sunsynk',
-            'nonce': uuid4()
+            'nonce': int(time.time() * 1000)
         }
     )
 
