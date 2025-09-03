@@ -166,19 +166,102 @@ When running the integration for the first time, you will see an error message i
 }
 ```
 ## Setting the settings entity value with a properly formatted string
-Each setting must be separated by a semicolon (;).
+
 Note that you cannot mix battery settings with system mode settings. I.E `"batteryCap": "100";"time2on":"true"` will not work.
 
-### Battery settings example of a single setting:
+### Version 1
+
+Each setting must be separated by a semicolon (;).
+
+#### Battery settings example of a single setting:
 `"batteryCap": "100"`
-### Example to update multiple battery settings simultaneously:
+#### Example to update multiple battery settings simultaneously:
 `"batteryCap": "100";"batteryLowCap": "35"`
 
-### System mode settings example of a single setting:
+#### System mode settings example of a single setting:
 `"time2on":"true"`
-### Example to update multiple system mode settings simultaneously:
-###### Below will turn on the timer switch (peakAndVallery) and at the same time enable grid charge Timer 2 and Timer 3
+#### Example to update multiple system mode settings simultaneously:
+
+Below will turn on the timer switch (peakAndVallery) and at the same time enable grid charge Timer 2 and Timer 3
+
 `"peakAndVallery": "1";"time2on":"true";"time3on":"true"`
+
+### Version 2
+
+The concept of version 2 is to allow both a more concise formatting, and to allow for shorter setting names, to allow more settings to be updated within the HomeAssistant maximum length of 255 characters. 
+
+To identify a version 2 setting value, the value must be prefixed with `v2#`.
+
+Each setting key and value must be separated by a colon (:), and each setting must be separated by a semicolon (;). For eaxmple:
+
+`v2#setting1:value1;setting2:value2;setting3:value3`
+
+Quotes are not required around names or values.
+
+You can use either the full name of the setting, or the abbreviated name, as listed in the table below.
+
+So the following are equivalent:
+
+`v2#peakAndVallery:1`
+
+and 
+
+`v2#pav:1`
+
+| name | short_name |
+|:---|:---|
+| safetyType | st |
+| battMode | bm |
+| solarSell | ss |
+| pvMaxLimit | pml |
+| energyMode | em |
+| peakAndVallery | pav |
+| sysWorkMode | swm |
+| sellTime1 | s1 |
+| sellTime2 | s2 |
+| sellTime3 | s3 |
+| sellTime4 | s4 |
+| sellTime5 | s5 |
+| sellTime6 | s6 |
+| sellTime1Pac | s1p |
+| sellTime2Pac | s2p |
+| sellTime3Pac | s3p |
+| sellTime4Pac | s4p |
+| sellTime5Pac | s5p |
+| sellTime6Pac | s6p |
+| cap1 | c1 |
+| cap2 | c2 |
+| cap3 | c3 |
+| cap4 | c4 |
+| cap5 | c5 |
+| cap6 | c6 |
+| sellTime1Volt | s1v |
+| sellTime2Volt | s2v |
+| sellTime3Volt | s3v |
+| sellTime4Volt | s4v | 
+| sellTime5Volt | s5v |
+| sellTime6Volt | s6v |
+| zeroExportPower | zep |
+| solarMaxSellPower | msp |
+| mondayOn | dmo |
+| tuesdayOn | dtu |
+| wednesdayOn | dwe |
+| thursdayOn | dth |
+| fridayOn | dfr |
+| saturdayOn | dsa |
+| sundayOn | dsu |
+| time1on | gr1 |
+| time2on | gr2 |
+| time3on | gr3 |
+| time4on | gr4 |
+| time5on | gr5 |
+| time6on | gr6 |
+| genTime1on | ge1 |
+| genTime2on | ge2 |
+| genTime3on | ge3 |
+| genTime4on | ge4 |
+| genTime5on | ge5 |
+| genTime6on | ge6 |
  
 
 

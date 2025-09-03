@@ -17,7 +17,10 @@ import json
 import requests
 from datetime import datetime
 import urllib3
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) 
+
+from settings_converter import SettingsConverter
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Load settings from JSON file
 try:
@@ -109,9 +112,15 @@ def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
         
         #print(str(parsed_inverter_json))
         #print(str(parsed_inverter_json['state']))
-        
-        EntSettings = str(parsed_inverter_json['state']).split(";")        
-        #print("The following settings were found in: " + ConsoleColor.OKCYAN  +  "solarsynkv3_" + Serial + "_settings" + ConsoleColor.ENDC)                
+
+        RawSettings = str(parsed_inverter_json['state'])
+
+        # change to enable short settings
+        RawSettings = SettingsConverter().convert(RawSettings)
+
+        EntSettings = RawSettings.split(";")
+
+        #print("The following settings were found in: " + ConsoleColor.OKCYAN  +  "solarsynkv3_" + Serial + "_settings" + ConsoleColor.ENDC)
         LoopCount=0 
         LastSettingsType=""
         for EntSetting in EntSettings: 
