@@ -1,4 +1,7 @@
 ### 2025/09/02
+Version "3.0.23" - Added All Inverter settings to be posted to entities.
+
+### 2025/09/02
 Version "3.0.22" - Fixed OAuth endpoint and request structure
 
 ### 2025/08/24
