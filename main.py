@@ -104,7 +104,8 @@ if BearerToken:
                 (getapi.GetBatteryData, "Battery Data"),
                 (getapi.GetLoadData, "Load Data"),
                 (getapi.GetOutputData, "Output Data"),
-                (getapi.GetDCACTemp, "DC & AC Temperature Data")
+                (getapi.GetDCACTemp, "DC & AC Temperature Data"),
+                (getapi.GetInverterSettingsData, "Inverter Settings")
             ]
 
             # Start threaded API calls
