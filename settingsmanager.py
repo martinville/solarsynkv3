@@ -92,7 +92,7 @@ def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
             httpurl_proto = "http"
 
         headers = {"Content-Type": "application/json","Authorization": f"Bearer {HaToken}"}  
-        url = f"{httpurl_proto}://" + str(json_settings['Home_Assistant_IP']) + ":" + str(json_settings['Home_Assistant_PORT']) + "/api/states/input_text.solarsynkv3_" + Serial + '_settings'
+        url = f"{httpurl_proto}://" + str(json_settings['Home_Assistant_IP']) + ":" + str(json_settings['Home_Assistant_PORT']) + "/api/states/input_text.solarsynkv3_" + Serial + '_settings_AH'
         print("Get automation settings: " + ConsoleColor.WARNING + url + ConsoleColor.ENDC)
         #print(str(url))
         #print(str(headers))
@@ -270,7 +270,7 @@ def ResetSettingsEntity(Serial):
         else:
             httpurl_proto = "http"     
     
-    url = f"{httpurl_proto}://" + str(json_settings['Home_Assistant_IP']) + ":" + str(json_settings['Home_Assistant_PORT']) + "/api/states/input_text.solarsynkv3_" + Serial + '_settings'
+    url = f"{httpurl_proto}://" + str(json_settings['Home_Assistant_IP']) + ":" + str(json_settings['Home_Assistant_PORT']) + "/api/states/input_text.solarsynkv3_" + Serial + '_settings_AH'
     headers = {"Content-Type": "application/json","Authorization": f"Bearer {HAToken}"}    
     payload = {"attributes": {"unit_of_measurement": ""}, "state": ""}
     
@@ -429,3 +429,4 @@ def replace_string_true_with_boolean(obj):
         return True
     else:
         return obj
+
