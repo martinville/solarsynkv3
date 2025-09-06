@@ -18,7 +18,7 @@ import requests
 from datetime import datetime
 import urllib3
 
-from settings_converter import SettingsConverter
+from src.settings.converter.settings_converter import SettingsConverter
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
