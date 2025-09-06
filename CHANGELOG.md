@@ -1,3 +1,6 @@
+### 2025/09/06
+Version "3.0.23" - Added more entities, Base Inverter info are now also posted as an entity instead of just dumping the info in the log.
+
 ### 2025/09/02
 Version "3.0.23" - Added All Inverter settings to be posted to entities.
 
