@@ -82,6 +82,48 @@ def GetInverterInfo(Token,Serial):
             print("Inverter Nickname: " + ConsoleColor.OKCYAN + str(parsed_inverter_json['data']['user']['nickname']) + ConsoleColor.ENDC)
             print("Inverter Mobile: " + ConsoleColor.OKCYAN + str(parsed_inverter_json['data']['user']['mobile']) + ConsoleColor.ENDC)
             print("Inverter Email: " + ConsoleColor.OKCYAN + str(parsed_inverter_json['data']['user']['email']) + ConsoleColor.ENDC)
+            #Post HA Entities
+            postapi.PostHAEntity(Serial,"kWh","energy","Inverter Info etotal","etotal",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"kWh","energy","Inverter Info emonth","emonth",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"kWh","energy","Inverter Info etoday","etoday",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"kWh","energy","Inverter Info eyear","eyear",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info sn","sn",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info alias","alias",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info gsn","gsn",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info status","status",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info runStatus","runStatus",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info type","type",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info thumbUrl","thumbUrl",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info opened","opened",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info version-masterVer","version_masterVer",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info version-softVer","version_softVer",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info version-hardVer","version_hardVer",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info version-hmiVer","version_hmiVer",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info version-bmsVer","version_bmsVer",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info version-commVer","version_commVer",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info plant-id","plant_id",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info plant-name","plant_name",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info plant-type","plant_type",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info plant-master","plant_master",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info plant-installer","plant_installer",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info plant-email","plant_email",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info plant-phone","plant_phone",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info custCode","custCode",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info commType","commType",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"W","power","Inverter Info pac","pac",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info updateAt","updateAt",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"W","power","Inverter Info ratePower","ratePower",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info brand","brand",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info address","address",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info model","model",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info protocolIdentifier","protocolIdentifier",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info equipType","equipType",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info user-id","user_id",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info user-nickname","user_nickname",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info user-mobile","user_mobile",str(parsed_inverter_json['data']['etotal']))
+            postapi.PostHAEntity(Serial,"","","Inverter Info user-email","user_email",str(parsed_inverter_json['data']['etotal']))
+            
+        
        
             
 
@@ -1265,6 +1307,7 @@ def GetDCACTemp(Token,Serial):
 
     except json.JSONDecodeError:
         print(ConsoleColor.FAIL + "Error: Failed to parse Service Provider API response." + ConsoleColor.ENDC)         
+
 
 
 
