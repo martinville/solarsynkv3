@@ -8,6 +8,7 @@ Integrate your Sunsynk account with Home Assistant for real-time solar energy mo
 ## Documentation
 
 ![](https://github.com/martinville/solarsynkv3/blob/main/www/addonavail.png?raw=true)
+
 [Installation](docs/INSTALL.md)
 
 [Setting inverter settings](docs/INVERTER_SETTINGS.md)
