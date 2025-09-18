@@ -14,6 +14,7 @@ COPY getapi.py /
 COPY gettoken.py /
 COPY postapi.py /
 COPY settingsmanager.py /
+COPY src /src/
 
 
 
