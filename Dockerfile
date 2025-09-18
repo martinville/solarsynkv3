@@ -14,10 +14,11 @@ COPY getapi.py /
 COPY gettoken.py /
 COPY postapi.py /
 COPY settingsmanager.py /
-COPY src /src/
+COPY src/ /src/
 
 
 
 RUN chmod a+x /run.sh
 
 CMD [ "/run.sh" ]
+
