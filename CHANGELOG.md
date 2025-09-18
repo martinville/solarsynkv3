@@ -1,3 +1,6 @@
+### 2025/09/18
+Version "3.0.26" - Fix bad DOCKERFILE in 3.0.25
+
 ### 2025/09/17
 Version "3.0.25" - Allow sending settings back to inverter in shortened format
 
