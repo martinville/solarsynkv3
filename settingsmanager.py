@@ -18,6 +18,7 @@ import requests
 from datetime import datetime
 import urllib3
 
+from src.clients.home_assistant_client import HomeAssistantClient
 from src.settings.converter.settings_converter import SettingsConverter
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -84,29 +85,16 @@ def DownloadProviderSettings(Token,Serial):
         
 def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
     global api_server
-    
-    with open('/data/options.json') as options_file:
-        json_settings = json.load(options_file)
-        HaToken = json_settings['HA_LongLiveToken']
 
-        if json_settings['Enable_HTTPS']:
-            httpurl_proto = "https"
-        else:
-            httpurl_proto = "http"
+    home_assistant_client = HomeAssistantClient()
 
-        headers = {"Content-Type": "application/json","Authorization": f"Bearer {HaToken}"}  
-        url = f"{httpurl_proto}://" + str(json_settings['Home_Assistant_IP']) + ":" + str(json_settings['Home_Assistant_PORT']) + "/api/states/input_text.solarsynkv3_" + Serial + '_settings'
-        print("Get automation settings: " + ConsoleColor.WARNING + url + ConsoleColor.ENDC)
-        #print(str(url))
-        #print(str(headers))
-      
     #Build Local Settings Templates (Later we will inject settings from the HA entity)
     print(ConsoleColor.WARNING +  BuildLocalBatterySettings() + ConsoleColor.ENDC)
     print(ConsoleColor.WARNING +  BuildLocalSystemModeSettings() + ConsoleColor.ENDC)
-    
+
     try:
         # GET HA Settings from entity
-        response = requests.get(url, headers=headers, timeout=10, verify=False)
+        response = home_assistant_client.get("/api/states/input_text.solarsynkv3_" + Serial + '_settings')
         response.raise_for_status()
         parsed_inverter_json = response.json()
         
@@ -270,22 +258,15 @@ def PostSettingToSunSynk(Token,Serial,SettingsType):
 
 def ResetSettingsEntity(Serial):
     global api_server
-    with open('/data/options.json') as options_file:
-        json_settings = json.load(options_file)
-        HAToken = json_settings['HA_LongLiveToken']
 
-        if json_settings['Enable_HTTPS']:
-            httpurl_proto = "https"
-        else:
-            httpurl_proto = "http"     
-    
-    url = f"{httpurl_proto}://" + str(json_settings['Home_Assistant_IP']) + ":" + str(json_settings['Home_Assistant_PORT']) + "/api/states/input_text.solarsynkv3_" + Serial + '_settings'
-    headers = {"Content-Type": "application/json","Authorization": f"Bearer {HAToken}"}    
+    home_assistant_client = HomeAssistantClient()
+
+    path = "/api/states/input_text.solarsynkv3_" + Serial + '_settings'
     payload = {"attributes": {"unit_of_measurement": ""}, "state": ""}
     
     try:
         # Send POST request with timeout (10s)
-        response = requests.post(url, json=payload, headers=headers, timeout=10, verify=False)
+        response = home_assistant_client.post(path, payload)
 
         # Raise an exception for HTTP errors (4xx, 5xx)
         response.raise_for_status()
