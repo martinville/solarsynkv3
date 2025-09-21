@@ -24,7 +24,7 @@ def gettoken():
 
     # Get key to encode token with
     response = requests.get(
-        'https://api.sunsynk.net/anonymous/publicKey',
+        f'https://{json_settings["API_Server"]}/anonymous/publicKey',
         params={
             'source': 'sunsynk',
             'nonce': int(time.time() * 1000)
@@ -95,3 +95,4 @@ def gettoken():
     except json.JSONDecodeError:
         print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)
         return BearerToken
+
