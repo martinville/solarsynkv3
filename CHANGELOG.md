@@ -1,3 +1,6 @@
+### 2025/09/21
+Version "3.0.27" - Fix hardcoded end-point hostname in gettoken.py
+
 ### 2025/09/18
 Version "3.0.26" - Fix bad DOCKERFILE in 3.0.25
 
