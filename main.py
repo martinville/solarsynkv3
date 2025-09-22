@@ -125,7 +125,7 @@ if BearerToken:
             settingsmanager.GetNewSettingsFromHAEntity(BearerToken, str(serialitem))
 
             # Clear old settings to prevent re-sending
-            print("Cleaning out previous settings...")
+            print("Checking if settings may be flushed...")
             settingsmanager.ResetSettingsEntity(serialitem)
 
         else:
