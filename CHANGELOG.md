@@ -1,3 +1,6 @@
+### 2025/09/22
+Version "3.0.28" - Added option to use internal "supervisor" API to communicate with Home Assistant. Users should select this option unless they are updating a different HA instance to where this addon is installed. Existing users will not be affected by default, but can change their configuration if they wish.
+
 ### 2025/09/21
 Version "3.0.27" - Fix hardcoded end-point hostname in gettoken.py
 
