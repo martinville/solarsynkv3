@@ -25,8 +25,7 @@ class Configuration:
                 httpurl_proto = "http"
 
             # API URL
-            self.base_url = f"{httpurl_proto}://" + str(self['Home_Assistant_IP']) + ":" + str(
-                self['Home_Assistant_PORT'])
+            self.base_url = f"{httpurl_proto}://{self['Home_Assistant_IP']}:{self['Home_Assistant_PORT']}"
 
         return self.base_url
 
