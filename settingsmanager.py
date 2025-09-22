@@ -265,15 +265,15 @@ def ResetSettingsEntity(Serial):
     payload = {"attributes": {"unit_of_measurement": ""}, "state": ""}
 
     #BOF CHECK IF SETTINGS HELPER EXIST
-    try:
-        response = requests.get(path, timeout=5)
-        if response.status_code == 404:
-            print(ConsoleColor.FAIL + f"Error: Failed to connect to Home Assistant Settings via API. {e} settings will not be flushed out." + ConsoleColor.ENDC)
-        else:
-            print(f"URL exists (Status code: {response.status_code}) Settings may be flushed.")            
-            SettingsExist=True
-    except requests.RequestException as e:
-        print(ConsoleColor.OKGREEN + f"Error connecting: {e}" + ConsoleColor.ENDC)    
+    #try:
+    #    response = requests.get(path, timeout=5)
+    #    if response.status_code == 404:
+    #        print(ConsoleColor.FAIL + f"Error: Failed to connect to Home Assistant Settings via API. {e} settings will not be flushed out." + ConsoleColor.ENDC)
+    #    else:
+    #        print(f"URL exists (Status code: {response.status_code}) Settings may be flushed.")            
+    #        SettingsExist=True
+    #except requests.RequestException as e:
+    #    print(ConsoleColor.OKGREEN + f"Error connecting: {e}" + ConsoleColor.ENDC)    
     #EOF CHECK IF SETTINGS HELPER EXIST    
     
     try:
@@ -431,4 +431,5 @@ def replace_string_true_with_boolean(obj):
         return True
     else:
         return obj
+
 
