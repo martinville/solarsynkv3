@@ -40,7 +40,7 @@ def PostHAEntity(Serial,UOM,UOMLong,fName,sName,EntityVal):
         }
 
     try:
-        response = home_assistant_client.post("/api/states/sensor.solarsynkv3_" + Serial + '_' + sName, payload)
+        response = home_assistant_client.post("/states/sensor.solarsynkv3_" + Serial + '_' + sName, payload)
 
         # Raise an exception for HTTP errors (4xx, 5xx)
         response.raise_for_status()
@@ -88,7 +88,7 @@ def ConnectionTest(Serial,UOM,UOMLong,fName,sName,EntityVal):
 
     home_assistant_client = HomeAssistantClient()
 
-    path = "/api/states/sensor.solarsynkv3_" + Serial + '_' + sName
+    path = "/states/sensor.solarsynkv3_" + Serial + '_' + sName
     payload = {
         "attributes": {
             "device_class": f"{UOMLong}",

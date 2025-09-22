@@ -17,7 +17,7 @@ class Configuration:
 
     def home_assistant_url(self):
         if self.get('use_internal_api', False):
-            return 'http://supervisor/core'
+            return 'http://supervisor/core/api'
         else:
             if self['Enable_HTTPS']:
                 httpurl_proto = "https"
@@ -25,7 +25,7 @@ class Configuration:
                 httpurl_proto = "http"
 
             # API URL
-            self.base_url = f"{httpurl_proto}://{self['Home_Assistant_IP']}:{self['Home_Assistant_PORT']}"
+            self.base_url = f"{httpurl_proto}://{self['Home_Assistant_IP']}:{self['Home_Assistant_PORT']}/api"
 
         return self.base_url
 
