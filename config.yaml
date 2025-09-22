@@ -1,6 +1,6 @@
 name: "SolarSynkV3"
 description: "Home Assistant add-on for syncing solar/inverter data from SynSynk.net"
-version: "3.0.27"
+version: "3.0.28"
 slug: "solar_synkv3"
 init: false
 arch:
@@ -10,6 +10,7 @@ arch:
   - armv7
   - i386
 url: "https://github.com/martinville/solarsynkv3/tree/main"
+homeassistant_api: true
   
   
 options:
@@ -21,12 +22,14 @@ options:
   HA_LongLiveToken: ""
   Refresh_rate: 300
   Enable_HTTPS: false
-  API_Server: "api.sunsynk.net"  
+  API_Server: "api.sunsynk.net"
+  use_internal_api: false
   
 schema:
   sunsynk_user: str
   sunsynk_pass: password
   sunsynk_serial: str
+  use_internal_api: bool
   Home_Assistant_IP: str
   Home_Assistant_PORT: int
   HA_LongLiveToken: password

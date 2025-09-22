@@ -26,3 +26,6 @@ configuration:
   API_Server:
     name: API Endpoint
     description: Select the apropriate API server. Use api.sunsynk.net for SunSynk based inverters or pv.inteless.com for generic Elinter based inverters.
+  use_internal_api:
+    name: Use HomeAssistant Supervisor API
+    description: Use the HomeAssistant Supervisor API to communicate with HomeAssistant. If this is set, the Home Assistant IP, port, token and http/https settings are ignored. Only turn this off if you have problems, or if you are running SolarSynk on a different HomeAssistant instance to the one you want to send the data to.
