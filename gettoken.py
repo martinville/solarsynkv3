@@ -34,7 +34,7 @@ def gettoken():
     public_key_signature = hashlib.md5(public_key_signature_input.encode()).hexdigest()
 
     # Additional parameters for specific API server
-    additional_params = { 'signature': public_key_signature } if json_settings["API_Server"] == "pv.inteless.com" else {}
+    additional_params = { 'sign': public_key_signature } if json_settings["API_Server"] == "pv.inteless.com" else {}
 
     # Get public key to encode token with
     response = requests.get(
@@ -110,4 +110,5 @@ def gettoken():
     except json.JSONDecodeError:
         print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)
         return BearerToken
+
 
