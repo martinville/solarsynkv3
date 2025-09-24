@@ -121,7 +121,7 @@ if BearerToken:
             print(ConsoleColor.OKGREEN + "All API calls completed successfully!" + ConsoleColor.ENDC)
 
             print("Checking if settings can be processed and flushed...")
-            #BOF CHECK SSETTINGS ENTITY's existance
+            #BOF CHECK SETTINGS ENTITY's existance
             #SETUP VARS
             SUPERVISOR_URL = os.getenv("SUPERVISOR", "http://supervisor")
             SUPERVISOR_TOKEN = os.getenv("SUPERVISOR_TOKEN")
