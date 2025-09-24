@@ -120,12 +120,7 @@ if BearerToken:
 
             print(ConsoleColor.OKGREEN + "All API calls completed successfully!" + ConsoleColor.ENDC)
 
-            # Download and process inverter settings
-            settingsmanager.DownloadProviderSettings(BearerToken, str(serialitem))
-            settingsmanager.GetNewSettingsFromHAEntity(BearerToken, str(serialitem))
-
-            # Clear old settings to prevent re-sending
-            print("Checking if settings may be flushed...")
+            print("Checking if settings can be processed and flushed...")
             #BOF CHECK SSETTINGS ENTITY's existance
             #SETUP VARS
             SUPERVISOR_URL = os.getenv("SUPERVISOR", "http://supervisor")
@@ -141,15 +136,19 @@ if BearerToken:
             try:
                 response = requests.get(url, headers=headers, timeout=5)
                 if response.status_code == 200:
-                    print(f"URL exists (Status code: {response.status_code}) Settings may be flushed.")                     
+                    print(ConsoleColor.OKGREEN + f"URL exists (Status code: {response.status_code}) Settings may be proccessed and flushed." + ConsoleColor.ENDC)                     
                     SettingsExist=True                   
                 else:
-                    print(f"Error: Failed to connect to Home Assistant Settings via API. {e} settings will not be flushed out.")
+                    print(ConsoleColor.FAIL + f"Error: Failed to connect to Home Assistant Settings via API. {e} settings will not be proccessed and flushed out." + ConsoleColor.ENDC)
                     SettingsExist=False
             except requests.RequestException as e:
                     print(f"Error connecting: {e}" )  
             #EOF CHECK SSETTINGS ENTITY's existance
             if SettingsExist==True:
+                # Download and process inverter settings
+                settingsmanager.DownloadProviderSettings(BearerToken, str(serialitem))
+                settingsmanager.GetNewSettingsFromHAEntity(BearerToken, str(serialitem))                
+                # Clear old settings to prevent re-sending
                 settingsmanager.ResetSettingsEntity(serialitem)
 
         else:
