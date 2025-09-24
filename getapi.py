@@ -164,7 +164,7 @@ def GetInverterSettingsData(Token,Serial):
 
         if parsed_inverter_json.get('msg') == "Success":           
             print(ConsoleColor.BOLD + "PV data fetch response: " + ConsoleColor.OKGREEN + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
-            #print(parsed_inverter_json);
+            print(parsed_inverter_json);
             #print("PV Pac: " + ConsoleColor.OKCYAN + str(parsed_inverter_json['data']['pac']) + ConsoleColor.ENDC)
             print("Inverter Setting sellTime1: " + ConsoleColor.OKCYAN + str(parsed_inverter_json['data']['sellTime1']))
             print("Inverter Setting genTime2on: " + ConsoleColor.OKCYAN + str(parsed_inverter_json['data']['genTime2on']))
@@ -1310,6 +1310,7 @@ def GetDCACTemp(Token,Serial):
 
     except json.JSONDecodeError:
         print(ConsoleColor.FAIL + "Error: Failed to parse Service Provider API response." + ConsoleColor.ENDC)         
+
 
 
 
