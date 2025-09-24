@@ -3,6 +3,7 @@ def gettoken():
     import base64
     import json
     import requests
+    import hashlib
     from io import StringIO
     from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15
     from cryptography.hazmat.primitives.serialization import load_pem_public_key
@@ -22,12 +23,26 @@ def gettoken():
     with open('/data/options.json') as options_file:
        json_settings = json.load(options_file)
 
-    # Get key to encode token with
+    # Determine source based on API server
+    source = "elinter" if json_settings["API_Server"] == "pv.inteless.com" else "sunsynk"
+
+    # Create a nonce for the public key request
+    public_key_nonce = int(time.time() * 1000)
+
+    # Create a signature for the public key request
+    public_key_signature_input = f"nonce={public_key_nonce}&source={source}POWER_VIEW"
+    public_key_signature = hashlib.md5(public_key_signature_input.encode()).hexdigest()
+
+    # Additional parameters for specific API server
+    additional_params = { 'signature': public_key_signature } if json_settings["API_Server"] == "pv.inteless.com" else {}
+
+    # Get public key to encode token with
     response = requests.get(
         f'https://{json_settings["API_Server"]}/anonymous/publicKey',
         params={
-            'source': 'sunsynk',
-            'nonce': int(time.time() * 1000)
+            'source': source,
+            'nonce': public_key_nonce,
+            **additional_params
         }
     )
 
@@ -60,7 +75,7 @@ def gettoken():
         "client_id": "csp-web",
         "grant_type": "password",
         "password": encrypted_password,
-        "source": "sunsynk",
+        "source": source,
         "username": json_settings['sunsynk_user']
     }
     # Headers
