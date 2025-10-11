@@ -1,6 +1,6 @@
 name: "SolarSynkV3"
 description: "Home Assistant add-on for syncing solar/inverter data from SynSynk.net"
-version: "3.0.29"
+version: "3.0.30"
 slug: "solar_synkv3"
 init: false
 arch:
@@ -36,6 +36,7 @@ schema:
   Refresh_rate: int
   Enable_HTTPS: bool
   API_Server: list(api.sunsynk.net|pv.inteless.com)
+
 
 
 
