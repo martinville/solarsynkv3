@@ -30,12 +30,13 @@ schema:
   sunsynk_pass: password
   sunsynk_serial: str
   use_internal_api: bool
-  Home_Assistant_IP: str
-  Home_Assistant_PORT: int
-  HA_LongLiveToken: password
+  Home_Assistant_IP: str?
+  Home_Assistant_PORT: int?
+  HA_LongLiveToken: password?
   Refresh_rate: int
   Enable_HTTPS: bool
   API_Server: list(api.sunsynk.net|pv.inteless.com)
+
 
 
 
