@@ -121,28 +121,38 @@ if BearerToken:
             print(ConsoleColor.OKGREEN + "All API calls completed successfully!" + ConsoleColor.ENDC)
 
             print("Checking if settings can be processed and flushed...")
-            #BOF CHECK SETTINGS ENTITY's existance
-            #SETUP VARS
+
+            # BOF CHECK SETTINGS ENTITY's EXISTENCE
+            # SETUP VARS
             SUPERVISOR_URL = os.getenv("SUPERVISOR", "http://supervisor")
             SUPERVISOR_TOKEN = os.getenv("SUPERVISOR_TOKEN")
-            url = SUPERVISOR_URL +  "/core/api/states/input_text.solarsynkv3_" + serialitem + '_settings'
-            print(ConsoleColor.MAGENTA + "URL-->" + url + ConsoleColor.ENDC)            
+            url = f"{SUPERVISOR_URL}/core/api/states/input_text.solarsynkv3_{serialitem}_settings"
+            print(ConsoleColor.MAGENTA + "URL --> " + url + ConsoleColor.ENDC)
+            
             headers = {
                 "Authorization": f"Bearer {SUPERVISOR_TOKEN}",
                 "Content-Type": "application/json",
             }
-            #Connect and get settings entity response details
+            
+            # Connect and get settings entity response details
             try:
                 response = requests.get(url, headers=headers, timeout=5)
                 if response.status_code == 200:
-                    print(ConsoleColor.OKGREEN + f"URL exists (Status code: {response.status_code}) Settings may be proccessed and flushed." + ConsoleColor.ENDC)                     
-                    SettingsExist=True                   
+                    print(ConsoleColor.OKGREEN + f"URL exists (Status code: {response.status_code}) Settings may be processed and flushed." + ConsoleColor.ENDC)
+                    SettingsExist = True
                 else:
-                    print(ConsoleColor.FAIL + f"Error: Failed to connect to Home Assistant Settings via API. {e} settings will not be proccessed and flushed out." + ConsoleColor.ENDC)
-                    SettingsExist=False
+                    print(ConsoleColor.FAIL + f"Error: Failed to connect to Home Assistant Settings via API. Status code: {response.status_code}. Settings will not be processed and flushed out." + ConsoleColor.ENDC)
+                    SettingsExist = False
+            
             except requests.RequestException as e:
-                    print(f"Error connecting: {e}" )  
-            #EOF CHECK SSETTINGS ENTITY's existance
+                print(f"Error connecting: {e}")
+                SettingsExist = False
+            # EOF CHECK SETTINGS ENTITY's EXISTENCE
+     
+
+
+
+            
             if SettingsExist==True:
                 # Download and process inverter settings
                 settingsmanager.DownloadProviderSettings(BearerToken, str(serialitem))
