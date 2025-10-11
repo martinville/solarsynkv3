@@ -1,3 +1,9 @@
+### 2025/10/11
+Version "3.0.30" - Made some confieg fields optional.
+  Home_Assistant_IP: str?
+  Home_Assistant_PORT: int?
+  HA_LongLiveToken: password?
+
 ### 2025/09/22
 Version "3.0.29" - Fixed the bootstrapping issue where the settings entity will be automatically created when you run the addon for the first time due to the settings entity "reset" action.
 
