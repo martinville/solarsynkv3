@@ -141,7 +141,7 @@ if BearerToken:
                     print(ConsoleColor.OKGREEN + f"URL exists (Status code: {response.status_code}) Settings may be processed and flushed." + ConsoleColor.ENDC)
                     SettingsExist = True
                 else:
-                    print(ConsoleColor.FAIL + f"Error: Failed to connect to Home Assistant Settings via API. Status code: {response.status_code}. Settings will not be processed and flushed out. Please manually create an entity called [input_text.solarsynkv3_{serialitem}_settings]" + ConsoleColor.ENDC)
+                    print(ConsoleColor.FAIL + f"Error: Unable to connect to Home Assistant Settings via the API {response.status_code}. Settings will not be processed or applied. Please create a text entity manually named: [solarsynkv3_{serialitem}_settings]" + ConsoleColor.ENDC)
                     SettingsExist = False
             
             except requests.RequestException as e:
