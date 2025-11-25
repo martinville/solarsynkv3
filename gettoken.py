@@ -1,5 +1,12 @@
+import time
+from hashlib import md5
+
+
+def get_nonce():
+    return int(time.time() * 1000)
+
+
 def gettoken():
-    import time
     import base64
     import json
     import requests
@@ -10,15 +17,15 @@ def gettoken():
 
     BearerToken = ""
 
-    class ConsoleColor:    
+    class ConsoleColor:
         OKBLUE = "\033[34m"
         OKCYAN = "\033[36m"
-        OKGREEN = "\033[32m"        
+        OKGREEN = "\033[32m"
         MAGENTA = "\033[35m"
         WARNING = "\033[33m"
         FAIL = "\033[31m"
         ENDC = "\033[0m"
-        BOLD = "\033[1m" 
+        BOLD = "\033[1m"
 
     with open('/data/options.json') as options_file:
        json_settings = json.load(options_file)
@@ -27,7 +34,7 @@ def gettoken():
     source = "elinter" if json_settings["API_Server"] == "pv.inteless.com" else "sunsynk"
 
     # Create a nonce for the public key request
-    public_key_nonce = int(time.time() * 1000)
+    public_key_nonce = get_nonce()
 
     # Create a signature for the public key request
     public_key_signature_input = f"nonce={public_key_nonce}&source={source}POWER_VIEW"
@@ -43,12 +50,14 @@ def gettoken():
         }
     )
 
+    public_key_string = response.json()['data']
+
     # Write public key file
     public_key_file = StringIO()
     public_key_file.writelines(
         [
             '-----BEGIN PUBLIC KEY-----',
-            response.json()['data'],
+            public_key_string,
             '-----END PUBLIC KEY-----'
         ]
     )
@@ -64,19 +73,25 @@ def gettoken():
         padding=PKCS1v15()
     )).decode('utf-8')
 
+    token_nonce = get_nonce()
+    token_sign_string = f'nonce={token_nonce}&source=sunsynk{public_key_string[:10]}'
+    token_sign = md5(token_sign_string.encode()).hexdigest()
+
     # API URL
     url = f'https://{json_settings["API_Server"]}/oauth/token/new'
     # Prepare request payload
     payload = {
-        "areaCode": "sunsynk",
         "client_id": "csp-web",
         "grant_type": "password",
         "password": encrypted_password,
         "source": source,
-        "username": json_settings['sunsynk_user']
+        "username": json_settings['sunsynk_user'],
+        'nonce': token_nonce,
+        'sign': token_sign
     }
+
     # Headers
-    headers = {"Content-Type": "application/json"}    
+    headers = {"Content-Type": "application/json"}
     try:
         # Send POST request with timeout (10s)
         response = requests.post(url, json=payload, headers=headers, timeout=10)
@@ -107,6 +122,3 @@ def gettoken():
     except json.JSONDecodeError:
         print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)
         return BearerToken
-
-
-
