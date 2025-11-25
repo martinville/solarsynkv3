@@ -1,3 +1,6 @@
+### 2025/11/25
+Version "3.0.31" - Added newly-required nonce and sign to token request
+
 ### 2025/10/11
 Version "3.0.30" - Made some config fields optional.
   Home_Assistant_IP: str?
