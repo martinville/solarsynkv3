@@ -33,16 +33,13 @@ def gettoken():
     public_key_signature_input = f"nonce={public_key_nonce}&source={source}POWER_VIEW"
     public_key_signature = hashlib.md5(public_key_signature_input.encode()).hexdigest()
 
-    # Additional parameters for specific API server
-    additional_params = { 'sign': public_key_signature } if json_settings["API_Server"] == "pv.inteless.com" else {}
-
     # Get public key to encode token with
     response = requests.get(
         f'https://{json_settings["API_Server"]}/anonymous/publicKey',
         params={
             'source': source,
             'nonce': public_key_nonce,
-            **additional_params
+            'sign': public_key_signature
         }
     )
 
@@ -110,5 +107,6 @@ def gettoken():
     except json.JSONDecodeError:
         print(ConsoleColor.FAIL + "Error: Failed to parse Sunsynk API response." + ConsoleColor.ENDC)
         return BearerToken
+
 
 
