@@ -60,7 +60,6 @@ print("-------------------------------------------------------------------------
 print("-- " + ConsoleColor.MAGENTA + f"Running Script SolarSynkV3" + ConsoleColor.ENDC)
 print("-- " + "Using API Endpoint: " + ConsoleColor.MAGENTA + json_settings['API_Server'] + ConsoleColor.ENDC )
 print("-- https://github.com/martinville/solarsynkv3")
-print("-- " + ConsoleColor.OKCYAN + "Fetching Inverter: " + serialitem +  ConsoleColor.ENDC )
 print("------------------------------------------------------------------------------")   
 
 # Get Bearer Token
