@@ -46,7 +46,7 @@ Make sure you also populate the "Homeassistant Long Live Token" field with your 
 
 Click your profile picture in the bottom left of the HA interface and go to the "Security" tab. Scroll down to the bottom and generate a long-lived token. The name isn't important for SolarSynk, but the token key is what you need to enter in the configuration page.
 
-### Create Settings helper entity
+### Create Settings Helper Entity
 When this add-on posts inverter values to Home Assistant via the API, the resulting entities cannot be managed directly by the user. To allow configuration of the settings that are sent to the inverter, a helper entity must be created.
 ** DO THIS BEFORE YOU START THE ADDON ** 
 
