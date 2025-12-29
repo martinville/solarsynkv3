@@ -46,6 +46,14 @@ Make sure you also populate the "Homeassistant Long Live Token" field with your 
 
 Click your profile picture in the bottom left of the HA interface and go to the "Security" tab. Scroll down to the bottom and generate a long-lived token. The name isn't important for SolarSynk, but the token key is what you need to enter in the configuration page.
 
+### Create Settings helper entity
+When this addon post inverter values to home assistant via the API the entities become un-managable by the user. Therefore its nesesarry to create a helper entity to be able to set the settings you want to post to the inverter.
+To create the entity go to Settings --> Devices & Services --> Click the Helpers tab on the top navigation menu --> Create New.
+
+Helper type is "Text" so search and select for "Text" and name it "solarsynkv3_[YOUR_INVERTER_SERIAL_HERE]_settings"
+
+
+
 ### Start the script
 After entering all of the required information you can go ahead and start the service script.
 
