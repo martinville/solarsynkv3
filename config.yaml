@@ -10,9 +10,10 @@ arch:
   - armv7
   - i386
 url: "https://github.com/martinville/solarsynkv3/tree/main"
-homeassistant_api: true
+homeassistant_api: false
 full_access: false
 host_network: false
+ingress: true
   
 options:
   sunsynk_user: ""
@@ -37,6 +38,7 @@ schema:
   Refresh_rate: int
   Enable_HTTPS: bool
   API_Server: list(api.sunsynk.net|pv.inteless.com)
+
 
 
 
