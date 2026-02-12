@@ -1,4 +1,7 @@
 ### 2025/11/25
+Version "3.0.32" - Updated docker permissions to increase security.
+
+### 2025/11/25
 Version "3.0.31" - Added newly-required nonce and sign to token request
 
 ### 2025/10/11
