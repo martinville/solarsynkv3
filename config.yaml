@@ -9,7 +9,7 @@ arch:
   - armhf
   - armv7
   - i386
-url: "https://github.com/martinville/solarsynkv3/tree/main"
+url: "https://github.com/russdan/solarsynkv3/tree/main"
 homeassistant_api: true
 full_access: false
 host_network: false
