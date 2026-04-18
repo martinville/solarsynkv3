@@ -124,6 +124,8 @@ def GetInverterInfo(Token,Serial):
             postapi.PostHAEntity(Serial,"","","Inverter Info user-nickname","user_nickname",str(parsed_inverter_json['data']['user']['nickname']))
             postapi.PostHAEntity(Serial,"","","Inverter Info user-mobile","user_mobile",str(parsed_inverter_json['data']['user']['mobile']))
             postapi.PostHAEntity(Serial,"","","Inverter Info user-email","user_email",str(parsed_inverter_json['data']['user']['email']))
+
+            #postapi.PostHAEntity(Serial,"s","timestamp","Last Updated Time","last_updated","ddddd")
         
             
         
