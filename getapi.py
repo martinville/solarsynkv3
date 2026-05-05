@@ -125,9 +125,7 @@ def GetInverterInfo(Token,Serial):
             postapi.PostHAEntity(Serial,"","","Inverter Info user-mobile","user_mobile",str(parsed_inverter_json['data']['user']['mobile']))
             postapi.PostHAEntity(Serial,"","","Inverter Info user-email","user_email",str(parsed_inverter_json['data']['user']['email']))
             
-            #Functin Usage --> def PostHAEntity(Serial,UOM,UOMLong,fName,sName,EntityVal):
-            #dt_string = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-            #postapi.PostHAEntity(Serial,"","timestamp","Last Updated Time","last_updated",dt_string)
+
         
             
         
@@ -1254,7 +1252,10 @@ def GetOutputData(Token,Serial):
             postapi.PostHAEntity(Serial,"W","power","Inverter In Power","inverter_in_power",str(parsed_inverter_json['data']['pInv']))
             postapi.PostHAEntity(Serial,"W","power","Inverter Power","inverter_power",str(parsed_inverter_json['data']['pac']))
             postapi.PostHAEntity(Serial,"Hz","frequency","Inverter Frequency","inverter_frequency",str(parsed_inverter_json['data']['fac']))
-
+            
+            #Functin Usage --> def PostHAEntity(Serial,UOM,UOMLong,fName,sName,EntityVal):
+            Last_Update_dt_string = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+            postapi.PostHAEntity(Serial,"","timestamp","Last Updated Time","last_updated",Last_Update_dt_string)
             print(ConsoleColor.OKGREEN + "Output fetch complete" + ConsoleColor.ENDC)
                 
             
