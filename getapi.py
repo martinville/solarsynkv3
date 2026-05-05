@@ -1091,7 +1091,7 @@ def GetBatteryData(Token,Serial):
             postapi.PostHAEntity(Serial,"Ah","current","Battery Capacity","battery_capacity",str(parsed_inverter_json['data']['capacity']))
             postapi.PostHAEntity(Serial,"Ah","current","Battery Correct Capacity","battery_correct_capacity",str(parsed_inverter_json['data']['correctCap']))
             postapi.PostHAEntity(Serial,"%","battery","Battery BMS SOC","battery_bms_soc",str(parsed_inverter_json['data']['bmsSoc']))
-            postapi.PostHAEntity(Serial,"A","current","Battery BMS Voltage","battery_bms_current",str(parsed_inverter_json['data']['bmsCurrent']))
+            postapi.PostHAEntity(Serial,"A","current","Battery BMS Current","battery_bms_current",str(parsed_inverter_json['data']['bmsCurrent']))
             postapi.PostHAEntity(Serial,"°C","temperature","Battery BMS Temperature","battery_bms_temperature",str(parsed_inverter_json['data']['bmsTemp']))
             postapi.PostHAEntity(Serial,"V","voltage","Battery Voltage","battery_voltage",str(parsed_inverter_json['data']['voltage']))
             postapi.PostHAEntity(Serial,"°C","temperature","Battery Temperature","battery_temperature",str(parsed_inverter_json['data']['temp']))
