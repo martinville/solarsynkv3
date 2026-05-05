@@ -126,8 +126,8 @@ def GetInverterInfo(Token,Serial):
             postapi.PostHAEntity(Serial,"","","Inverter Info user-email","user_email",str(parsed_inverter_json['data']['user']['email']))
             
             #Functin Usage --> def PostHAEntity(Serial,UOM,UOMLong,fName,sName,EntityVal):
-            dt_string = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-            postapi.PostHAEntity(Serial,"","timestamp","Last Updated Time","last_updated",dt_string)
+            #dt_string = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+            #postapi.PostHAEntity(Serial,"","timestamp","Last Updated Time","last_updated",dt_string)
         
             
         
