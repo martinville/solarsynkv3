@@ -1,3 +1,6 @@
+### 2026/05/05
+Version "3.0.33" - Added entity called "SolarSynk Last Updated Time". Added line breaks to PEM file to fix cert formatting issues. Fixed ARG Build in dockerfile.
+
 ### 2026/02/12
 Version "3.0.32" - Updated docker permissions to increase security.
 
