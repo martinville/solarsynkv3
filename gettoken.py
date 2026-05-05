@@ -52,15 +52,15 @@ def gettoken():
 
     public_key_string = response.json()['data']
 
-    # Write public key file
+    # Write public key file with proper line breaks
     public_key_file = StringIO()
-    public_key_file.writelines(
-        [
-            '-----BEGIN PUBLIC KEY-----',
-            public_key_string,
-            '-----END PUBLIC KEY-----'
-        ]
+    public_key_file.write(
+        "-----BEGIN PUBLIC KEY-----\n"
+        f"{public_key_string}\n"
+        "-----END PUBLIC KEY-----\n"
     )
+
+    
     public_key_file.seek(0)
 
     # Load public key
