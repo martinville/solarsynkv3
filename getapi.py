@@ -1255,7 +1255,7 @@ def GetOutputData(Token,Serial):
             
             #Functin Usage --> def PostHAEntity(Serial,UOM,UOMLong,fName,sName,EntityVal):
             Last_Update_dt_string = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-            postapi.PostHAEntity(Serial,"","timestamp","Last Updated Time","last_updated",Last_Update_dt_string)
+            postapi.PostHAEntity(Serial,"","timestamp","SolarSynk Last Updated Time","solarsynk_last_updated",Last_Update_dt_string)
             print(ConsoleColor.OKGREEN + "Output fetch complete" + ConsoleColor.ENDC)
                 
             
