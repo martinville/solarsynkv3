@@ -1,22 +1,11 @@
-#ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.19
-#FROM $BUILD_FROM
+ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.19
+FROM $BUILD_FROM
 #ARG BUILD_FROM
 #FROM $BUILD_FROM
 
 # Install requirements for add-on
-#RUN apk add --no-cache python3 py3-pip py3-requests py3-cryptography
+RUN apk add --no-cache python3 py3-pip py3-requests py3-cryptography
 
-ARG BUILD_FROM
-FROM $BUILD_FROM
-
-# Install system dependencies first
-RUN apk add --no-cache \
-    python3 \
-    py3-pip \
-    py3-requests \
-    py3-cryptography \
-    libffi \
-    openssl
 
 
 WORKDIR /data
