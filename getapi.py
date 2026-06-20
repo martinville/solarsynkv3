@@ -1352,7 +1352,7 @@ def GetFlowData(Token,Serial):
             print("Flow homeLoadPower: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['homeLoadPower']) + ConsoleColor.ENDC)
             print("Flow chargePilePower: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['chargePilePower']) + ConsoleColor.ENDC)
             print("Flow pvTo: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['pvTo']) + ConsoleColor.ENDC)
-            Print("Flow toLoad: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['toLoad']) + ConsoleColor.ENDC)
+            print("Flow toLoad: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['toLoad']) + ConsoleColor.ENDC)
             print("Flow toSmartLoad: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['toSmartLoad']) + ConsoleColor.ENDC)
             print("Flow toUpsLoad: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['toUpsLoad']) + ConsoleColor.ENDC)
             print("Flow toHomeLoad: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['toHomeLoad']) + ConsoleColor.ENDC)
