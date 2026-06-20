@@ -1,3 +1,7 @@
+### 2026/06/20
+Version "3.0.34" - Added flow endpoint which exposes more entities including [Home Load Power] and [Smart Laod Power]
+List of data points --> custCode,protocolIdentifier,meterCode,pvPower,battPower,battPower2,gridOrMeterPower,loadOrEpsPower,genPower,minPower,soc,smartLoadPower,upsLoadPower,homeLoadPower,chargePilePower,pvTo,toLoad,toSmartLoad,toUpsLoad,toHomeLoad,toGrid,toBat,batTo,gridTo,genTo,minTo,toChargePile,existsGen,existsMin,existsGrid,genOn,microOn,existsMeter,bmsCommFaultFlag,existsThreeLoad,existsSmartLoad,existsChargePile,existThinkPower,time
+
 ### 2026/05/05
 Version "3.0.33" - Added entity called "SolarSynk Last Updated Time". Added line breaks to PEM file to fix cert formatting issues. Fixed ARG Build in dockerfile.
 
