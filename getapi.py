@@ -1317,6 +1317,119 @@ def GetDCACTemp(Token,Serial):
         print(ConsoleColor.FAIL + "Error: Failed to parse Service Provider API response." + ConsoleColor.ENDC)         
 
 
+def GetFlowData(Token,Serial): 
+    global api_server        
+    flow_url = f"https://{api_server}/api/v1/inverter/{Serial}/flow"
+    # Headers (Fixed Bearer token format)
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {Token}"
+    }
+
+    try:
+        # Corrected to use GET request
+        response = requests.get(flow_url, headers=headers, timeout=10)
+        response.raise_for_status()
+
+        parsed_flow_json = response.json()
+
+        if parsed_flow_json.get('msg') == "Success":           
+            print(ConsoleColor.BOLD + "Flow data fetch response: " + ConsoleColor.OKGREEN + parsed_flow_json['msg'] + ConsoleColor.ENDC)
+            #print(parsed_flow_json)  
+
+            print("Flow custCode: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['custCode']) + ConsoleColor.ENDC)
+            print("Flow protocolIdentifier: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['protocolIdentifier']) + ConsoleColor.ENDC)
+            print("Flow meterCode: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['meterCode']) + ConsoleColor.ENDC)
+            print("Flow pvPower: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['pvPower']) + ConsoleColor.ENDC)
+            print("Flow battPower: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['battPower']) + ConsoleColor.ENDC)
+            print("Flow battPower2: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['battPower2']) + ConsoleColor.ENDC)
+            print("Flow gridOrMeterPower: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['gridOrMeterPower']) + ConsoleColor.ENDC)
+            print("Flow loadOrEpsPower: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['loadOrEpsPower']) + ConsoleColor.ENDC)
+            print("Flow genPower: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['genPower']) + ConsoleColor.ENDC)
+            print("Flow minPower: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['minPower']) + ConsoleColor.ENDC)
+            print("Flow soc: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['soc']) + ConsoleColor.ENDC)
+            print("Flow smartLoadPower: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['smartLoadPower']) + ConsoleColor.ENDC)
+            print("Flow upsLoadPower: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['upsLoadPower']) + ConsoleColor.ENDC)
+            print("Flow homeLoadPower: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['homeLoadPower']) + ConsoleColor.ENDC)
+            print("Flow chargePilePower: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['chargePilePower']) + ConsoleColor.ENDC)
+            print("Flow pvTo: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['pvTo']) + ConsoleColor.ENDC)
+            Print("Flow toLoad: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['toLoad']) + ConsoleColor.ENDC)
+            print("Flow toSmartLoad: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['toSmartLoad']) + ConsoleColor.ENDC)
+            print("Flow toUpsLoad: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['toUpsLoad']) + ConsoleColor.ENDC)
+            print("Flow toHomeLoad: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['toHomeLoad']) + ConsoleColor.ENDC)
+            print("Flow toGrid: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['toGrid']) + ConsoleColor.ENDC)
+            print("Flow toBat: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['toBat']) + ConsoleColor.ENDC)
+            print("Flow batTo: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['batTo']) + ConsoleColor.ENDC)
+            print("Flow gridTo: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['gridTo']) + ConsoleColor.ENDC)
+            print("Flow genTo: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['genTo']) + ConsoleColor.ENDC)
+            print("Flow minTo: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['minTo']) + ConsoleColor.ENDC)
+            print("Flow toChargePile: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['toChargePile']) + ConsoleColor.ENDC)
+            print("Flow existsGen: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['existsGen']) + ConsoleColor.ENDC)
+            print("Flow existsMin: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['existsMin']) + ConsoleColor.ENDC)
+            print("Flow existsGrid: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['existsGrid']) + ConsoleColor.ENDC)
+            print("Flow genOn: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['genOn']) + ConsoleColor.ENDC)
+            print("Flow microOn: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['microOn']) + ConsoleColor.ENDC)
+            print("Flow existsMeter: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['existsMeter']) + ConsoleColor.ENDC)
+            print("Flow bmsCommFaultFlag: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['bmsCommFaultFlag']) + ConsoleColor.ENDC)
+            print("Flow existsThreeLoad: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['existsThreeLoad']) + ConsoleColor.ENDC)
+            print("Flow existsSmartLoad: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['existsSmartLoad']) + ConsoleColor.ENDC)
+            print("Flow existsChargePile: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['existsChargePile']) + ConsoleColor.ENDC)
+            print("Flow existThinkPower: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['existThinkPower']) + ConsoleColor.ENDC)
+            print("Flow time: " + ConsoleColor.OKCYAN + str(parsed_flow_json['data']['time']) + ConsoleColor.ENDC)
+
+            postapi.PostHAEntity(Serial,"","","Customer Code","cust_code",str(parsed_flow_json['data']['custCode']))
+            postapi.PostHAEntity(Serial,"","","Protocol Identifier","protocol_identifier",str(parsed_flow_json['data']['protocolIdentifier']))
+            postapi.PostHAEntity(Serial,"","","Meter Code","meter_code",str(parsed_flow_json['data']['meterCode']))
+            postapi.PostHAEntity(Serial,"W","power","PV Power","pv_power",str(parsed_flow_json['data']['pvPower']))
+            postapi.PostHAEntity(Serial,"W","power","Battery Power","battery_power",str(parsed_flow_json['data']['battPower']))
+            postapi.PostHAEntity(Serial,"W","power","Battery Power 2","battery_power_2",str(parsed_flow_json['data']['battPower2']))
+            postapi.PostHAEntity(Serial,"W","power","Grid Or Meter Power","grid_or_meter_power",str(parsed_flow_json['data']['gridOrMeterPower']))
+            postapi.PostHAEntity(Serial,"W","power","Load Or EPS Power","load_or_eps_power",str(parsed_flow_json['data']['loadOrEpsPower']))
+            postapi.PostHAEntity(Serial,"W","power","Generator Power","generator_power",str(parsed_flow_json['data']['genPower']))
+            postapi.PostHAEntity(Serial,"W","power","Micro Inverter Power","micro_inverter_power",str(parsed_flow_json['data']['minPower']))
+            postapi.PostHAEntity(Serial,"%","battery","Battery SOC","battery_soc",str(parsed_flow_json['data']['soc']))
+            postapi.PostHAEntity(Serial,"W","power","Smart Load Power","smart_load_power",str(parsed_flow_json['data']['smartLoadPower']))
+            postapi.PostHAEntity(Serial,"W","power","UPS Load Power","ups_load_power",str(parsed_flow_json['data']['upsLoadPower']))
+            postapi.PostHAEntity(Serial,"W","power","Home Load Power","home_load_power",str(parsed_flow_json['data']['homeLoadPower']))
+            postapi.PostHAEntity(Serial,"W","power","Charge Pile Power","charge_pile_power",str(parsed_flow_json['data']['chargePilePower']))
+            postapi.PostHAEntity(Serial,"","","PV To","pv_to",str(parsed_flow_json['data']['pvTo']))
+            postapi.PostHAEntity(Serial,"","","To Load","to_load",str(parsed_flow_json['data']['toLoad']))
+            postapi.PostHAEntity(Serial,"","","To Smart Load","to_smart_load",str(parsed_flow_json['data']['toSmartLoad']))
+            postapi.PostHAEntity(Serial,"","","To UPS Load","to_ups_load",str(parsed_flow_json['data']['toUpsLoad']))
+            postapi.PostHAEntity(Serial,"","","To Home Load","to_home_load",str(parsed_flow_json['data']['toHomeLoad']))
+            postapi.PostHAEntity(Serial,"","","To Grid","to_grid",str(parsed_flow_json['data']['toGrid']))
+            postapi.PostHAEntity(Serial,"","","To Battery","to_battery",str(parsed_flow_json['data']['toBat']))
+            postapi.PostHAEntity(Serial,"","","Battery To","battery_to",str(parsed_flow_json['data']['batTo']))
+            postapi.PostHAEntity(Serial,"","","Grid To","grid_to",str(parsed_flow_json['data']['gridTo']))
+            postapi.PostHAEntity(Serial,"","","Generator To","generator_to",str(parsed_flow_json['data']['genTo']))
+            postapi.PostHAEntity(Serial,"","","Micro To","micro_to",str(parsed_flow_json['data']['minTo']))
+            postapi.PostHAEntity(Serial,"","","To Charge Pile","to_charge_pile",str(parsed_flow_json['data']['toChargePile']))
+            postapi.PostHAEntity(Serial,"","","Generator Exists","exists_generator",str(parsed_flow_json['data']['existsGen']))
+            postapi.PostHAEntity(Serial,"","","Micro Exists","exists_micro",str(parsed_flow_json['data']['existsMin']))
+            postapi.PostHAEntity(Serial,"","","Grid Exists","exists_grid",str(parsed_flow_json['data']['existsGrid']))
+            postapi.PostHAEntity(Serial,"","","Generator On","generator_on",str(parsed_flow_json['data']['genOn']))
+            postapi.PostHAEntity(Serial,"","","Micro On","micro_on",str(parsed_flow_json['data']['microOn']))
+            postapi.PostHAEntity(Serial,"","","Meter Exists","exists_meter",str(parsed_flow_json['data']['existsMeter']))
+            postapi.PostHAEntity(Serial,"","","BMS Comm Fault","bms_comm_fault",str(parsed_flow_json['data']['bmsCommFaultFlag']))
+            postapi.PostHAEntity(Serial,"","","Three Load Exists","exists_three_load",str(parsed_flow_json['data']['existsThreeLoad']))
+            postapi.PostHAEntity(Serial,"","","Smart Load Exists","exists_smart_load",str(parsed_flow_json['data']['existsSmartLoad']))
+            postapi.PostHAEntity(Serial,"","","Charge Pile Exists","exists_charge_pile",str(parsed_flow_json['data']['existsChargePile']))
+            postapi.PostHAEntity(Serial,"","","ThinkPower Exists","exists_think_power",str(parsed_flow_json['data']['existThinkPower']))
+            postapi.PostHAEntity(Serial,"","","Flow Time","flow_time",str(parsed_flow_json['data']['time']))     
+
+            print(ConsoleColor.OKGREEN + "Flow fetch complete" + ConsoleColor.ENDC) 
+            
+        else:
+            print("Flow data fetch response: " + ConsoleColor.FAIL + parsed_flow_json['msg'] + ConsoleColor.ENDC)
+
+    except requests.exceptions.Timeout:
+        print(ConsoleColor.FAIL + "Error: Request timed out while connecting to Service Provider API." + ConsoleColor.ENDC)
+
+    except requests.exceptions.RequestException as e:
+        print(ConsoleColor.FAIL + f"Error: Failed to connect to Service Provider API. {e}" + ConsoleColor.ENDC)
+
+    except json.JSONDecodeError:
+        print(ConsoleColor.FAIL + "Error: Failed to parse Service Provider API response." + ConsoleColor.ENDC)  
 
 
 
