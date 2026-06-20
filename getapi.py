@@ -1316,7 +1316,6 @@ def GetDCACTemp(Token,Serial):
     except json.JSONDecodeError:
         print(ConsoleColor.FAIL + "Error: Failed to parse Service Provider API response." + ConsoleColor.ENDC)         
 
-
 def GetFlowData(Token,Serial): 
     global api_server        
     flow_url = f"https://{api_server}/api/v1/inverter/{Serial}/flow"
