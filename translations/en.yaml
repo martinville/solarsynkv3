@@ -29,3 +29,24 @@ configuration:
   use_internal_api:
     name: Use HomeAssistant Supervisor API
     description: Use the HomeAssistant Supervisor API to communicate with HomeAssistant. If this is set, the Home Assistant IP, port, token and http/https settings are ignored. Only turn this off if you have problems, or if you are running SolarSynk on a different HomeAssistant instance to the one you want to send the data to.
+  mqtt_enabled:
+    name: Enable MQTT Discovery
+    description: Publish inverter data over MQTT using Home Assistant Discovery instead of the REST API. This gives every sensor a unique ID, groups them under a device per inverter, and makes them manageable from the Home Assistant UI. Requires an MQTT broker (e.g. the Mosquitto broker add-on) and the MQTT integration.
+  mqtt_host:
+    name: MQTT Broker Host
+    description: Hostname or IP of the MQTT broker. Leave blank to automatically use the broker provided by the Home Assistant MQTT service (Mosquitto add-on).
+  mqtt_port:
+    name: MQTT Broker Port
+    description: Port of the MQTT broker. Default is 1883. Leave blank/default to use the port provided by the Home Assistant MQTT service.
+  mqtt_username:
+    name: MQTT Username
+    description: Username for the MQTT broker. Leave blank to use the credentials provided by the Home Assistant MQTT service.
+  mqtt_password:
+    name: MQTT Password
+    description: Password for the MQTT broker. Leave blank to use the credentials provided by the Home Assistant MQTT service.
+  mqtt_discovery_prefix:
+    name: MQTT Discovery Prefix
+    description: The Home Assistant MQTT discovery prefix. Only change this if you customised it in the MQTT integration. Default is "homeassistant".
+  mqtt_base_topic:
+    name: MQTT Base Topic
+    description: The base topic that sensor state values are published under. Each inverter gets its own sub-topic (base_topic/inverter_serial/sensor). Default is "solarsynkv3".

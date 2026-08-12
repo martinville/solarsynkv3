@@ -16,21 +16,38 @@ class Configuration:
         return self._settings.get(key, default)
 
     def home_assistant_url(self):
-        if self.get('use_internal_api', False):
+        if self.get('use_internal_api', False) or not self.get('Home_Assistant_IP', ''):
+            # No explicit IP means we're on the local HA OS instance; use the Supervisor API.
             return 'http://supervisor/core/api'
-        else:
-            if self['Enable_HTTPS']:
-                httpurl_proto = "https"
-            else:
-                httpurl_proto = "http"
 
-            # API URL
-            self.base_url = f"{httpurl_proto}://{self['Home_Assistant_IP']}:{self['Home_Assistant_PORT']}/api"
-
+        httpurl_proto = "https" if self['Enable_HTTPS'] else "http"
+        self.base_url = f"{httpurl_proto}://{self['Home_Assistant_IP']}:{self['Home_Assistant_PORT']}/api"
         return self.base_url
 
     def home_assistant_token(self):
-        if self.get('use_internal_api', False):
+        if self.get('use_internal_api', False) or not self.get('Home_Assistant_IP', ''):
             return self.supervisor_token
-        else:
-            return self['HA_LongLiveToken']
+        return self['HA_LongLiveToken']
+
+    def mqtt_enabled(self):
+        return bool(self.get('mqtt_enabled', False))
+
+    def mqtt_host(self):
+        # Manual option wins, otherwise fall back to the Supervisor-provided MQTT service.
+        return self.get('mqtt_host') or os.environ.get('MQTT_HOST') or ''
+
+    def mqtt_port(self):
+        port = self.get('mqtt_port') or os.environ.get('MQTT_PORT')
+        return int(port) if port else 1883
+
+    def mqtt_username(self):
+        return self.get('mqtt_username') or os.environ.get('MQTT_USERNAME') or ''
+
+    def mqtt_password(self):
+        return self.get('mqtt_password') or os.environ.get('MQTT_PASSWORD') or ''
+
+    def mqtt_discovery_prefix(self):
+        return self.get('mqtt_discovery_prefix') or 'homeassistant'
+
+    def mqtt_base_topic(self):
+        return self.get('mqtt_base_topic') or 'solarsynkv3'

@@ -20,3 +20,7 @@ Or visit: [https://www.buymeacoffee.com/mailmartins](https://buymeacoffee.com/ma
 [Installation](docs/INSTALL.md)
 
 [Setting inverter settings](docs/INVERTER_SETTINGS.md)
+
+## MQTT Discovery (optional)
+
+SolarSynk can publish inverter data via **MQTT Discovery**. When enabled, every sensor gets a unique ID, is grouped under a device per inverter, and is manageable from the Home Assistant UI. Each inverter publishes to its own sub-topic. The broker is auto-detected from the Home Assistant MQTT service (Mosquitto add-on) and can be overridden manually. See [Installation](docs/INSTALL.md) for setup.

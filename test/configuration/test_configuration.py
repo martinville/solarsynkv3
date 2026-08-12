@@ -119,3 +119,56 @@ class TestOptions(TestCase):
                 'the-supervisor-token',
                 self.configuration.home_assistant_token()
             )
+
+    def _configuration_with(self, settings, environ=None):
+        with NamedTemporaryFile('w') as temporary_file:
+            json.dump(settings, temporary_file)
+            temporary_file.flush()
+            with patch.dict('os.environ', environ or {}, clear=True):
+                return Configuration(temporary_file.name)
+
+    def test_mqtt_enabled_defaults_to_false(self):
+        configuration = self._configuration_with({})
+        self.assertFalse(configuration.mqtt_enabled())
+
+    def test_mqtt_enabled_reads_option(self):
+        configuration = self._configuration_with({'mqtt_enabled': True})
+        self.assertTrue(configuration.mqtt_enabled())
+
+    def test_mqtt_host_prefers_option_over_env(self):
+        configuration = self._configuration_with(
+            {'mqtt_host': 'option-host'},
+            {'MQTT_HOST': 'env-host'}
+        )
+        self.assertEqual('option-host', configuration.mqtt_host())
+
+    def test_mqtt_host_falls_back_to_env(self):
+        configuration = self._configuration_with(
+            {'mqtt_host': ''},
+            {'MQTT_HOST': 'env-host'}
+        )
+        self.assertEqual('env-host', configuration.mqtt_host())
+
+    def test_mqtt_port_defaults_to_1883(self):
+        configuration = self._configuration_with({})
+        self.assertEqual(1883, configuration.mqtt_port())
+
+    def test_mqtt_port_falls_back_to_env(self):
+        configuration = self._configuration_with(
+            {'mqtt_port': ''},
+            {'MQTT_PORT': '8883'}
+        )
+        self.assertEqual(8883, configuration.mqtt_port())
+
+    def test_mqtt_credentials_fall_back_to_env(self):
+        configuration = self._configuration_with(
+            {'mqtt_username': '', 'mqtt_password': ''},
+            {'MQTT_USERNAME': 'env-user', 'MQTT_PASSWORD': 'env-pass'}
+        )
+        self.assertEqual('env-user', configuration.mqtt_username())
+        self.assertEqual('env-pass', configuration.mqtt_password())
+
+    def test_mqtt_discovery_prefix_and_base_topic_defaults(self):
+        configuration = self._configuration_with({})
+        self.assertEqual('homeassistant', configuration.mqtt_discovery_prefix())
+        self.assertEqual('solarsynkv3', configuration.mqtt_base_topic())

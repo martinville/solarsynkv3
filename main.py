@@ -10,6 +10,9 @@ import logging
 import traceback
 from datetime import datetime
 
+from src.clients.home_assistant_client import sanitize_entity_id_part
+from src.clients import mqtt_client
+
 # Define console colors for readability
 class ConsoleColor:    
     OKBLUE = "\033[34m"
@@ -128,7 +131,8 @@ if BearerToken:
             # SETUP VARS
             SUPERVISOR_URL = os.getenv("SUPERVISOR", "http://supervisor")
             SUPERVISOR_TOKEN = os.getenv("SUPERVISOR_TOKEN")
-            url = f"{SUPERVISOR_URL}/core/api/states/input_text.solarsynkv3_{serialitem}_settings"
+            settings_entity_id = "solarsynkv3_" + sanitize_entity_id_part(serialitem) + "_settings"
+            url = f"{SUPERVISOR_URL}/core/api/states/input_text.{settings_entity_id}"
             print(ConsoleColor.MAGENTA + "URL --> " + url + ConsoleColor.ENDC)
             
             headers = {
@@ -143,7 +147,7 @@ if BearerToken:
                     print(ConsoleColor.OKGREEN + f"URL exists (Status code: {response.status_code}) Settings may be processed and flushed." + ConsoleColor.ENDC)
                     SettingsExist = True
                 else:
-                    print(ConsoleColor.FAIL + f"Error: Unable to connect to Home Assistant Settings via the API HTTP Error: {response.status_code}. Settings will not be processed or applied. Please create a text entity manually named: [solarsynkv3_{serialitem}_settings]" + ConsoleColor.ENDC)
+                    print(ConsoleColor.FAIL + f"Error: Unable to connect to Home Assistant Settings via the API HTTP Error: {response.status_code}. Settings will not be processed or applied. Please create a text entity manually named: [{settings_entity_id}]" + ConsoleColor.ENDC)
                     SettingsExist = False
             
             except requests.RequestException as e:
@@ -170,5 +174,8 @@ if BearerToken:
         VarCurrentDate = datetime.now()
         print(f"Script completion time: {ConsoleColor.OKBLUE} {VarCurrentDate} {ConsoleColor.ENDC}") 
 
+
+# Mark MQTT offline and disconnect cleanly (no-op when MQTT is disabled)
+mqtt_client.close_client()
 
 print(ConsoleColor.OKBLUE + "Script execution completed." + ConsoleColor.ENDC)
