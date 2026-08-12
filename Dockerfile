@@ -7,6 +7,7 @@ FROM $BUILD_FROM
 
 # Install requirements for add-on
 RUN apk add --no-cache python3 py3-pip py3-requests py3-cryptography
+RUN apk add --no-cache py3-paho-mqtt || pip3 install --no-cache-dir --break-system-packages paho-mqtt
 
 
 

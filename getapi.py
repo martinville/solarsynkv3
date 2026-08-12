@@ -3,6 +3,7 @@ import logging
 import postapi
 import json
 import requests
+from collections import defaultdict
 from datetime import datetime
 
 class ConsoleColor:    
@@ -165,6 +166,9 @@ def GetInverterSettingsData(Token,Serial):
         parsed_inverter_json = response.json()
 
         if parsed_inverter_json.get('msg') == "Success":           
+            # Different inverter models/firmware return different setting keys.
+            # Fall back to None for any missing key instead of raising KeyError.
+            parsed_inverter_json['data'] = defaultdict(lambda: None, parsed_inverter_json.get('data') or {})
             print(ConsoleColor.BOLD + "PV data fetch response: " + ConsoleColor.OKGREEN + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
             #print(parsed_inverter_json);
             #print("PV Pac: " + ConsoleColor.OKCYAN + str(parsed_inverter_json['data']['pac']) + ConsoleColor.ENDC)

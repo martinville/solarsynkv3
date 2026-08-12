@@ -1,10 +1,22 @@
 import json
 import os
+import re
 
 import requests
 from requests import Response
 
 from src.configuration.configuration import Configuration
+
+
+def sanitize_entity_id_part(value: str) -> str:
+    """Convert a value into a valid Home Assistant entity id object_id part.
+
+    Home Assistant only accepts lowercase letters, digits and underscores in an
+    entity id. Serials such as ``VSN-1235SDFE1127-01`` contain uppercase letters
+    and hyphens which cause the states API to return ``400 Bad Request``.
+    """
+    slug = re.sub(r'[^a-z0-9_]+', '_', str(value).lower())
+    return re.sub(r'_+', '_', slug).strip('_')
 
 
 class HomeAssistantClient:

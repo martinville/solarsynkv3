@@ -16,6 +16,9 @@ When running the integration for the first time, you will see an error message i
 exist, along with instructions on how to create it. However, the integration will also attempt to automatically create
 the entity. If the automatic creation fails, you can follow the instructions in the log to manually create it.
 
+> **Note:** The settings feature always uses the Home Assistant API and works the same way whether or not MQTT Discovery
+> is enabled. The `input_text` settings helper is unaffected by the MQTT option.
+
 ## List of updatable settings
 
 #### Battery settings 

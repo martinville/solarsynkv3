@@ -21,6 +21,15 @@ Home_Assistant_PORT="$(bashio::config 'Home_Assistant_PORT')"
 Refresh_rate="$(bashio::config 'Refresh_rate')"
 Enable_HTTPS="$(bashio::config 'Enable_HTTPS')"
 
+# Expose the Supervisor-managed MQTT broker (Mosquitto add-on) to main.py when available.
+# Manual mqtt_host/port/username/password options still take priority in the Python config.
+if bashio::services.available "mqtt"; then
+    export MQTT_HOST="$(bashio::services mqtt 'host')"
+    export MQTT_PORT="$(bashio::services mqtt 'port')"
+    export MQTT_USERNAME="$(bashio::services mqtt 'username')"
+    export MQTT_PASSWORD="$(bashio::services mqtt 'password')"
+fi
+
 
 VarCurrentDate=$(date +%Y-%m-%d)
 

@@ -1,3 +1,6 @@
+### 2026/08/12
+Version "3.1.0" - Added optional MQTT Discovery publishing. When enabled, inverter data is published to Home Assistant via MQTT auto-discovery instead of the REST states API. This gives every sensor a unique ID, groups sensors under a device per inverter, and makes them manageable from the HA UI. Each inverter publishes to its own sub-topic (base_topic/inverter_serial/sensor). The MQTT broker is auto-detected from the Home Assistant MQTT service (Mosquitto add-on) and can be overridden manually. When MQTT is disabled the add-on keeps using the REST states API as before.
+
 ### 2026/06/20
 Version "3.0.34" - Added flow endpoint which exposes more entities including [Home Load Power] and [Smart Laod Power]
 List of data points --> custCode,protocolIdentifier,meterCode,pvPower,battPower,battPower2,gridOrMeterPower,loadOrEpsPower,genPower,minPower,soc,smartLoadPower,upsLoadPower,homeLoadPower,chargePilePower,pvTo,toLoad,toSmartLoad,toUpsLoad,toHomeLoad,toGrid,toBat,batTo,gridTo,genTo,minTo,toChargePile,existsGen,existsMin,existsGrid,genOn,microOn,existsMeter,bmsCommFaultFlag,existsThreeLoad,existsSmartLoad,existsChargePile,existThinkPower,time

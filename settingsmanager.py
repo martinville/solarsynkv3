@@ -18,7 +18,7 @@ import requests
 from datetime import datetime
 import urllib3
 
-from src.clients.home_assistant_client import HomeAssistantClient
+from src.clients.home_assistant_client import HomeAssistantClient, sanitize_entity_id_part
 from src.settings.converter.settings_converter import SettingsConverter
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -94,7 +94,7 @@ def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
 
     try:
         # GET HA Settings from entity
-        response = home_assistant_client.get("/states/input_text.solarsynkv3_" + Serial + '_settings')
+        response = home_assistant_client.get("/states/input_text.solarsynkv3_" + sanitize_entity_id_part(Serial) + '_settings')
         response.raise_for_status()
         parsed_inverter_json = response.json()
         
@@ -137,7 +137,8 @@ def GetNewSettingsFromHAEntity(SunSynkToken,Serial):
 
     except requests.exceptions.RequestException as e:
         print(ConsoleColor.FAIL + f"Error: Failed to connect to Home Assistant API. {e}" + ConsoleColor.ENDC)
-        print(f"You probably did not create the settings entity. Manually create it for inverter with serial " + ConsoleColor.OKCYAN + Serial + ConsoleColor.ENDC + " In the HA GUI in menu [Settings] -> [Devices & Services] -> [Helpers] tab -> [+ CREATE HELPER]. Choose [Text] and name it: " + ConsoleColor.OKCYAN  +  "solarsynkv3_" + Serial + "_settings" + ConsoleColor.ENDC)
+        settings_name = "solarsynkv3_" + sanitize_entity_id_part(Serial) + "_settings"
+        print(f"You probably did not create the settings entity. Manually create it for inverter with serial " + ConsoleColor.OKCYAN + Serial + ConsoleColor.ENDC + " In the HA GUI in menu [Settings] -> [Devices & Services] -> [Helpers] tab -> [+ CREATE HELPER]. Choose [Text] and name it: " + ConsoleColor.OKCYAN + settings_name + ConsoleColor.ENDC)
 
     except json.JSONDecodeError:
         print(ConsoleColor.MAGENTA + "Notice: Invalid or no settings found to post back to sunsynk. This is not a critical error, it just means that the settings you provided in the settings entity (/api/states/input_text.solarsynkv3_" + Serial + "_settings) is invalid or blank. If this is intentional just ignore." + ConsoleColor.ENDC)                
@@ -261,7 +262,7 @@ def ResetSettingsEntity(Serial):
 
     home_assistant_client = HomeAssistantClient()
 
-    path = "/states/input_text.solarsynkv3_" + Serial + '_settings'
+    path = "/states/input_text.solarsynkv3_" + sanitize_entity_id_part(Serial) + '_settings'
     payload = {"attributes": {"unit_of_measurement": ""}, "state": ""}
 
     #BOF CHECK IF SETTINGS HELPER EXIST
