@@ -848,11 +848,37 @@ def GetInverterSettingsData(Token,Serial):
             
 
 
-            
-            
+            # Independent System Mode status sensors
+            # Avoid case-sensitive Sunsynk API field name collisions.
+            for period in range(1, 7):
+                grid_key = f"time{period}on"
+                sell_key = f"sellTime{period}En"
+
+                grid_raw = parsed_inverter_json["data"].get(grid_key)
+                sell_raw = parsed_inverter_json["data"].get(sell_key)
+
+                if grid_raw is not None:
+                    grid_state = str(grid_raw).lower() in ("true", "1")
+                    postapi.PostHAEntity(
+                        Serial, "", "",
+                        f"Grid Charge {period}",
+                        f"grid_charge_{period}",
+                        str(grid_state).lower()
+                    )
+
+                if sell_raw is not None:
+                    sell_state = str(sell_raw) == "1"
+                    postapi.PostHAEntity(
+                        Serial, "", "",
+                        f"Sell Enabled {period}",
+                        f"sell_enabled_{period}",
+                        str(sell_state).lower()
+                    )
+
+
             print(ConsoleColor.OKGREEN + "Inverter Settings fetch complete" + ConsoleColor.ENDC)
-       
-            
+
+
 
         else:
             print("PV data fetch response: " + ConsoleColor.FAIL + parsed_inverter_json['msg'] + ConsoleColor.ENDC)
