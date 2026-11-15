@@ -73,7 +73,7 @@ the entity. If the automatic creation fails, you can follow the instructions in 
 | solarSell         | System Mode          | Solar Export           | 0 is off, 1 is on                                               | 
 | pvMaxLimit        | System Mode          | Inverter Power Limiter |
 | energyMode        | System Mode          | Energy Pattern         | 0 is priority battery, 1 is priority load                       |
-| peakAndVallery    | Unknown              | Unknown                | Unknown                                                         |
+| peakAndVallery    | System Mode          | Use Timer              | 0 is off, 1 is on                                               |
 | sysWorkMode       | System Mode          | Work Mode              | 0 is Selling First, 1 is Zero Export, 2 is Limited to Home      |
 | sellTime1         | System Mode          | Time 1                 |                                                                 |
 | sellTime2         | System Mode          | Time 2                 |                                                                 |
@@ -145,7 +145,7 @@ double quotes.
 
 #### Example to update multiple system mode settings simultaneously:
 
-Below will turn on the timer switch (peakAndVallery) and at the same time enable grid charge Timer 2 and Timer 3
+Below will turn on the Use Timer switch (peakAndVallery) and at the same time enable grid charge Timer 2 and Timer 3
 
 `"peakAndVallery": "1";"time2on":"true";"time3on":"true"`
 
